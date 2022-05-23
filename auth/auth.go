@@ -10,7 +10,22 @@ import (
 	"net/http/httputil"
 	"os/exec"
 	"time"
+
+	"github.com/adamrdrew/mosh/config"
 )
+
+const APP_ID = "f79d7735-864b-4ed7-a6dc-a3971824843b"
+const APP_NAME = "Mosh"
+
+func GetAuthorizer(conf config.Config) Auth {
+	authorizer := Auth{
+		ID:    APP_ID,
+		Name:  APP_NAME,
+		Token: conf.Token,
+	}
+	authorizer.CheckToken()
+	return authorizer
+}
 
 var DEFAULT_HEADER = http.Header{
 	"Content-Type": {"application/json"},

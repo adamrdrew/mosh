@@ -8,23 +8,18 @@ import (
 	"github.com/adamrdrew/mosh/server"
 )
 
-var APP_ID = "f79d7735-864b-4ed7-a6dc-a3971824843b"
-var APP_NAME = "Mosh"
-
 func main() {
-	conf := config.Config{}
-	conf.Load()
+	//Get or create and then get the local config
+	conf := config.GetConfig()
 
-	authorizer := auth.Auth{
-		ID:    APP_ID,
-		Name:  APP_NAME,
-		Token: conf.Token,
-	}
-	authorizer.CheckToken()
+	//Get the authorizer. This will auth to plex.tv if we don't have a valid token.
+	authorizer := auth.GetAuthorizer(conf)
 
-	conf.Token = authorizer.Token
-	conf.Save()
+	//Set the token and save the config
+	conf.SetToken(authorizer.Token)
 
+	//Get the server info
+	//TODO: If you have multiple servers you are SOL we're just using the first in the list
 	server := server.GetServer(conf)
 	fmt.Println(server)
 

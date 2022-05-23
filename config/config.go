@@ -7,6 +7,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func GetConfig() Config {
+	conf := Config{}
+	conf.Load()
+	return conf
+}
+
 const CONFIG_FILE = "config/config.yaml"
 
 type Config struct {
@@ -16,6 +22,11 @@ type Config struct {
 func (c *Config) Load() {
 	c.createConfigFileIfNotThere()
 	c.loadYAML()
+}
+
+func (c *Config) SetToken(token string) {
+	c.Token = token
+	c.Save()
 }
 
 func (c *Config) loadYAML() {
