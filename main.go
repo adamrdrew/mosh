@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/adamrdrew/mosh/auth"
 	"github.com/adamrdrew/mosh/config"
+	"github.com/adamrdrew/mosh/server"
 )
 
 var APP_ID = "f79d7735-864b-4ed7-a6dc-a3971824843b"
@@ -21,5 +24,8 @@ func main() {
 
 	conf.Token = authorizer.Token
 	conf.Save()
+
+	server := server.GetServer(conf)
+	fmt.Println(server)
 
 }

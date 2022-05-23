@@ -130,6 +130,7 @@ func (a *Auth) PollPIN() {
 		authorized = authToken.Response != ""
 
 		if authorized {
+			a.printResponse(response)
 			a.Token = authToken.Response
 			break
 		}
