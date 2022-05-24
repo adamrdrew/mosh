@@ -18,8 +18,8 @@ type ResponseTrack struct {
 	XMLName xml.Name `xml:"Track"`
 	//Will always be album
 	Type string `xml:"type,attr"`
-	//This is the endpoint we use to interact with this album
-	//example /library/metadata/33342/children
+	//This is the endpoint we use to play a song
+	//key="/library/parts/77708/1574343480/file.mp3"
 	Key string `xml:"key,attr"`
 	//Album title
 	Title string `xml:"title,attr"`
