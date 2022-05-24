@@ -73,3 +73,26 @@ func (s *Server) GetLibraries() responses.LibraryMediaContainer {
 
 	return *serverResponse
 }
+
+func (s *Server) SearchArtists(artistName string) []responses.ResponseArtistDirectory {
+	url := s.PlexURLs.SearchArstists(artistName)
+
+	body := s.doGet(url)
+
+	var serverResponse = new(responses.ResponseArtistMediaContainer)
+	xmlError := xml.Unmarshal(body, &serverResponse)
+	s.panic(xmlError)
+
+	return serverResponse.Directories
+}
+
+func (s *Server) SearchAlbums(albumName string) []responses.ResponseAlbumDirectory {
+	url := s.PlexURLs.SearchAlbums(albumName)
+	body := s.doGet(url)
+
+	var serverResponse = new(responses.ResponseAlbumMediaContainer)
+	xmlError := xml.Unmarshal(body, &serverResponse)
+	s.panic(xmlError)
+
+	return serverResponse.Directories
+}
