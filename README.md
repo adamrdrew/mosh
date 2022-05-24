@@ -31,7 +31,6 @@ http://<IP>:<PORT>/library/metadata/75242/children/?X-Plex-Token=<TOKEN>
 
 In both examples we've just got the key from the parent object.
 
-
 Search for an artist:
 http://<IP>:<PORT>/library/sections<LIBRARY KEY>all?title=nine inch&X-Plex-Token=<TOKEN>
 

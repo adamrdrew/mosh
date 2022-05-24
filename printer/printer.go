@@ -28,3 +28,13 @@ func Albums(source []responses.ResponseAlbumDirectory) {
 	}
 	t.Render()
 }
+
+func Songs(source []responses.ResponseTrack) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"ID", "Track", "Title", "Album", "Artist"})
+	for _, track := range source {
+		t.AppendRow(table.Row{track.RatingKey, track.Index, track.Title, track.ParentTitle, track.GrandParentTitle})
+	}
+	t.Render()
+}

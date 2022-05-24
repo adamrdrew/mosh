@@ -24,8 +24,8 @@ var lsArtistCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		server := getServer()
 		query := args[0]
-		artists := server.SearchArtists(query)
-		printer.Artists(artists)
+		albums := server.GetAlbumsForArtist(query)
+		printer.Albums(albums)
 	},
 }
 
@@ -36,7 +36,7 @@ var lsAlbumCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		server := getServer()
 		query := args[0]
-		albums := server.SearchAlbums(query)
-		printer.Albums(albums)
+		songs := server.GetSongsForAlbum(query)
+		printer.Songs(songs)
 	},
 }

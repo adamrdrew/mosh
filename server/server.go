@@ -96,3 +96,25 @@ func (s *Server) SearchAlbums(albumName string) []responses.ResponseAlbumDirecto
 
 	return serverResponse.Directories
 }
+
+func (s *Server) GetAlbumsForArtist(artistID string) []responses.ResponseAlbumDirectory {
+	url := s.PlexURLs.GetChildren(artistID)
+	body := s.doGet(url)
+
+	var serverResponse = new(responses.ResponseAlbumMediaContainer)
+	xmlError := xml.Unmarshal(body, &serverResponse)
+	s.panic(xmlError)
+
+	return serverResponse.Directories
+}
+
+func (s *Server) GetSongsForAlbum(albumID string) []responses.ResponseTrack {
+	url := s.PlexURLs.GetChildren(albumID)
+	body := s.doGet(url)
+
+	var serverResponse = new(responses.ResponseTracksMediaContainer)
+	xmlError := xml.Unmarshal(body, &serverResponse)
+	s.panic(xmlError)
+
+	return serverResponse.Tracks
+}

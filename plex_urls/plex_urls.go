@@ -8,6 +8,8 @@ const RT_LIBRARIES = "/library/sections"
 const XPLEXTOKEN = "X-Plex-Token="
 const RT_ARTIST_SEARCH = "/all?title="
 const RT_ALBUM_SEARCH = "/albums?title="
+const RT_METADATA = "/library/metadata/"
+const RT_CHILDREN = "/children"
 
 func GetPlexURLs(conf *config.Config) PlexURLs {
 	um := PlexURLs{
@@ -26,6 +28,11 @@ func (u *PlexURLs) Server() string {
 
 func (u *PlexURLs) GetLibraries() string {
 	return u.makeURL(RT_LIBRARIES)
+}
+
+func (u *PlexURLs) GetChildren(query string) string {
+	return u.withToken(u.Server() + RT_METADATA + query + RT_CHILDREN)
+
 }
 
 func (u *PlexURLs) SearchArstists(query string) string {
