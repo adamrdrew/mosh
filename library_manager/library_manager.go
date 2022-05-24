@@ -85,6 +85,7 @@ func (l *LibrarySelector) getUserSelection(musicLibs []responses.LibraryDirector
 			}
 		}
 		if validSelectionMade {
+			fmt.Println("Library set.")
 			break
 		} else {
 			fmt.Println("Invalid selection. Please try again.")

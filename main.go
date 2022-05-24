@@ -33,4 +33,6 @@ func main() {
 
 	library_manager.GetLibraryManager(server, &conf)
 
+	fmt.Println("We are ready to ROCK!!!!")
+
 }
