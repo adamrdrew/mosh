@@ -51,3 +51,4 @@ http://<IP>:<PORT>/library/sections<LIBRARY KEY>albums?title=pony&X-Plex-Token=<
 * [Plex API Wiki](https://github.com/Arcanemagus/plex-api/wiki/Plex-Web-API-Overview)
 * [Plex Media Server URL Commands](https://support.plex.tv/articles/201638786-plex-media-server-url-commands/)
 * [Plex TV URLs](https://github.com/Arcanemagus/plex-api/wiki/Plex.tv#urls)
+* [Beep](https://github.com/faiface/beep)

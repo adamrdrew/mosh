@@ -5,6 +5,7 @@ go 1.18
 require gopkg.in/yaml.v2 v2.4.0
 
 require (
+	github.com/faiface/beep v1.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 )
