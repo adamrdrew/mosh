@@ -13,10 +13,15 @@ func GetConfig() Config {
 	return conf
 }
 
+const UNINITIALIZED = "UNINITIALIZED"
+
 const CONFIG_FILE = "config/config.yaml"
 
 type Config struct {
-	Token string
+	Token   string
+	Address string
+	Port    string
+	Library string
 }
 
 func (c *Config) Load() {
@@ -60,7 +65,10 @@ func (c *Config) createConfigFileIfNotThere() {
 	}
 
 	defaultConfig := Config{
-		Token: "NOTYETCREATED",
+		Token:   UNINITIALIZED,
+		Address: UNINITIALIZED,
+		Port:    UNINITIALIZED,
+		Library: UNINITIALIZED,
 	}
 
 	yamlData, err := yaml.Marshal(&defaultConfig)

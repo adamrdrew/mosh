@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/adamrdrew/mosh/auth"
 	"github.com/adamrdrew/mosh/config"
+	"github.com/adamrdrew/mosh/library_selector"
 	"github.com/adamrdrew/mosh/server"
 )
 
@@ -21,6 +20,7 @@ func main() {
 	//Get the server info
 	//TODO: If you have multiple servers you are SOL we're just using the first in the list
 	server := server.GetServer(conf)
-	fmt.Println(server)
+
+	library_selector.GetLibrarySelector(conf, server)
 
 }

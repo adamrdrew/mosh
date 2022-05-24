@@ -8,32 +8,22 @@ import (
 	"net/http"
 
 	"github.com/adamrdrew/mosh/config"
+	"github.com/adamrdrew/mosh/plex_urls"
+	"github.com/adamrdrew/mosh/responses"
 )
 
 func GetServer(config config.Config) Server {
 	server := Server{
-		Address: "",
-		Port:    "",
-		Config:  config,
+		Config:   config,
+		PlexURLs: plex_urls.GetPlexURLs(config),
 	}
 	server.getServerData()
 	return server
 }
 
-type XMLMediaContainer struct {
-	Server XMLServer `xml:"Server"`
-}
-
-type XMLServer struct {
-	Name    string `xml:"name,attr"`
-	Address string `xml:"address,attr"`
-	Port    string `xml:"port,attr"`
-}
-
 type Server struct {
-	Address string
-	Port    string
-	Config  config.Config
+	Config   config.Config
+	PlexURLs plex_urls.PlexURLs
 }
 
 func (s *Server) panic(err error) {
@@ -42,9 +32,8 @@ func (s *Server) panic(err error) {
 	}
 }
 
-func (s *Server) getServerData() {
+func (s *Server) doGet(url string) []byte {
 	var client = http.Client{}
-	url := "https://plex.tv/pms/servers.xml?X-Plex-Token=" + s.Config.Token
 	req, err := http.NewRequest("GET", url, nil)
 	s.panic(err)
 
@@ -54,10 +43,33 @@ func (s *Server) getServerData() {
 	body, err := ioutil.ReadAll(response.Body)
 	s.panic(err)
 
-	var serverResponse = new(XMLMediaContainer)
+	return body
+
+}
+
+func (s *Server) getServerData() {
+	//This URL isn't in PlexURLs because that type provides
+	//Plex server queries. This is a plex.tv query. It is a one-off.
+	url := "https://plex.tv/pms/servers.xml?X-Plex-Token=" + s.Config.Token
+
+	body := s.doGet(url)
+
+	var serverResponse = new(responses.ServerMediaContainer)
 	xmlError := xml.Unmarshal(body, &serverResponse)
 	s.panic(xmlError)
 
-	s.Address = serverResponse.Server.Address
-	s.Port = serverResponse.Server.Port
+	s.Config.Address = serverResponse.Server.Address
+	s.Config.Port = serverResponse.Server.Port
+	s.Config.Save()
+}
+
+func (s *Server) GetLibraries() responses.LibraryMediaContainer {
+	url := s.PlexURLs.GetLibraries()
+	body := s.doGet(url)
+
+	var serverResponse = new(responses.LibraryMediaContainer)
+	xmlError := xml.Unmarshal(body, &serverResponse)
+	s.panic(xmlError)
+
+	return *serverResponse
 }
