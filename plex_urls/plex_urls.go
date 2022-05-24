@@ -6,7 +6,7 @@ import (
 
 const RT_LIBRARIES = "/library/sections"
 
-func GetPlexURLs(conf config.Config) PlexURLs {
+func GetPlexURLs(conf *config.Config) PlexURLs {
 	um := PlexURLs{
 		Config: conf,
 	}
@@ -14,7 +14,7 @@ func GetPlexURLs(conf config.Config) PlexURLs {
 }
 
 type PlexURLs struct {
-	Config config.Config
+	Config *config.Config
 }
 
 func (u *PlexURLs) Server() string {

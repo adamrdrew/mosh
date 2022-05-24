@@ -17,11 +17,12 @@ import (
 const APP_ID = "f79d7735-864b-4ed7-a6dc-a3971824843b"
 const APP_NAME = "Mosh"
 
-func GetAuthorizer(conf config.Config) Auth {
+func GetAuthorizer(conf *config.Config) Auth {
 	authorizer := Auth{
-		ID:    APP_ID,
-		Name:  APP_NAME,
-		Token: conf.Token,
+		ID:         APP_ID,
+		Name:       APP_NAME,
+		Token:      conf.Token,
+		Authorized: false,
 	}
 	authorizer.CheckToken()
 	return authorizer
@@ -46,14 +47,15 @@ func (p *Pin) GetID() string {
 }
 
 type Auth struct {
-	ID    string
-	Name  string
-	Token string
-	Pin   Pin
+	ID         string
+	Name       string
+	Token      string
+	Pin        Pin
+	Authorized bool
 }
 
 func (a *Auth) CheckToken() {
-	fmt.Println("Checking Plex authorization status...")
+	fmt.Println("🔑 Checking Plex authorization status...")
 	checkTokenURL := "https://plex.tv/api/v2/user?" +
 		"X-Plex-Product=" + a.Name +
 		"&X-Plex-Client-Identifier=" + a.ID +
@@ -64,16 +66,18 @@ func (a *Auth) CheckToken() {
 
 	switch response.StatusCode {
 	case 401:
-		fmt.Println("    FAILED: Authorization required.")
+		a.Authorized = false
+		fmt.Println("    ❌ Authorization required.")
 		a.ObtainToken()
 	case 200:
-		fmt.Println("    SUCCESS: Authorized.")
+		a.Authorized = true
+		fmt.Println("    ✅ Authorized.")
 	}
 
 }
 
 func (a *Auth) ObtainToken() {
-	fmt.Println("Obtaining token...")
+	fmt.Println("🔒 Obtaining token...")
 	a.ObtainPin()
 	a.OpenPinURL()
 	a.PollPIN()
@@ -122,7 +126,7 @@ func (a *Auth) OpenPinURL() {
 
 func (a *Auth) PollPIN() {
 	authorized := false
-	fmt.Println("Waiting for authorization...")
+	fmt.Println("💻 Waiting for authorization...")
 	url := "https://plex.tv/api/v2/pins/" + a.Pin.GetID() + "?code=" + a.Pin.Code + "&X-Plex-Client-Identifier=" + a.ID
 	for start := time.Now(); time.Since(start) < (time.Second * 60); {
 		print(".")
@@ -145,18 +149,12 @@ func (a *Auth) PollPIN() {
 		authorized = authToken.Response != ""
 
 		if authorized {
-			a.printResponse(response)
+			a.Authorized = true
 			a.Token = authToken.Response
 			break
 		}
 
 		time.Sleep(time.Second)
-	}
-
-	if authorized {
-		fmt.Println("Authorized.")
-	} else {
-		fmt.Println("\nAuthorization timed out or failed. Exiting.")
 	}
 
 }

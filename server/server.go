@@ -12,7 +12,7 @@ import (
 	"github.com/adamrdrew/mosh/responses"
 )
 
-func GetServer(config config.Config) Server {
+func GetServer(config *config.Config) Server {
 	server := Server{
 		Config:   config,
 		PlexURLs: plex_urls.GetPlexURLs(config),
@@ -22,7 +22,7 @@ func GetServer(config config.Config) Server {
 }
 
 type Server struct {
-	Config   config.Config
+	Config   *config.Config
 	PlexURLs plex_urls.PlexURLs
 }
 
