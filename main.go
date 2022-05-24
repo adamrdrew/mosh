@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/adamrdrew/mosh/auth"
 	"github.com/adamrdrew/mosh/config"
-	"github.com/adamrdrew/mosh/library_selector"
+	"github.com/adamrdrew/mosh/library_manager"
 	"github.com/adamrdrew/mosh/server"
 )
 
@@ -21,6 +21,5 @@ func main() {
 	//TODO: If you have multiple servers you are SOL we're just using the first in the list
 	server := server.GetServer(conf)
 
-	library_selector.GetLibrarySelector(conf, server)
-
+	libManager := library_manager.GetLibrarySelector(conf, server)
 }
