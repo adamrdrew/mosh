@@ -5,7 +5,7 @@ import "encoding/xml"
 type LibraryDirectory struct {
 	XMLName xml.Name `xml:"Directory"`
 	Type    string   `xml:"type,attr"`
-	UUID    string   `xml:"uuid,attr"`
+	Key     string   `xml:"key,attr"`
 	Title   string   `xml:"title,attr"`
 }
 

@@ -18,7 +18,7 @@ func GetLibraryManager(serv server.Server, conf *config.Config) LibrarySelector 
 		Config: conf,
 		Server: serv,
 	}
-	//The library UUID is already in the config so we don't need to do
+	//The library key is already in the config so we don't need to do
 	//anything else
 	if ls.isLibInConf() {
 		return ls
@@ -32,7 +32,7 @@ type LibrarySelector struct {
 	Config *config.Config
 }
 
-//Returns true if there's a library UUID in the config file
+//Returns true if there's a library key in the config file
 func (l *LibrarySelector) isLibInConf() bool {
 	return l.Server.Config.Library != config.UNINITIALIZED
 }
@@ -105,6 +105,6 @@ func (l *LibrarySelector) setLibInConf() {
 
 	selectedLib := l.getUserSelection(musicLibs)
 
-	l.Config.Library = selectedLib.UUID
+	l.Config.Library = selectedLib.Key
 	l.Config.Save()
 }
