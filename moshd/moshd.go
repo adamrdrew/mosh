@@ -4,10 +4,67 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/adamrdrew/mosh/ipc"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/flac"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
+	"github.com/faiface/beep/vorbis"
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/sevlyar/go-daemon"
 )
+
+type Player struct {
+	Streamer beep.StreamSeekCloser
+}
+
+func (p *Player) Play() {
+	log.Print("p.Play()")
+	done := make(chan bool)
+	speaker.Play(beep.Seq(p.Streamer, beep.Callback(func() {
+		log.Print("beep.Callback")
+		done <- true
+	})))
+	<-done
+	log.Print("<-done")
+}
+
+func (p *Player) PlaySong(path string) {
+	f, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+
+	mtype, err := mimetype.DetectFile(path)
+
+	var format beep.Format
+	var decErr error
+
+	switch mtype.String() {
+	case "audio/flac":
+		p.Streamer, format, decErr = flac.Decode(f)
+	case "audio/mpeg":
+		p.Streamer, format, decErr = mp3.Decode(f)
+	case "audio/ogg":
+		p.Streamer, format, decErr = vorbis.Decode(f)
+	default:
+		return
+	}
+
+	if decErr != nil {
+		panic(decErr)
+	}
+	defer p.Streamer.Close()
+
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+	p.Play()
+}
+
+var player Player
 
 //Entrypoint for the daemon
 func main() {
@@ -31,6 +88,8 @@ func main() {
 
 	log.Print("- - - - - - - - - - - - - - -")
 	log.Print("moshd started")
+
+	player = Player{}
 
 	startListener()
 }
@@ -71,6 +130,7 @@ func handleMessage(message ipc.Message) ipc.Response {
 	case "play":
 		response.Message = "Playing song"
 		log.Print("Play song: ", message.Data)
+		go player.PlaySong(message.Data)
 	case "stop":
 		response.Message = "Stopped song"
 		log.Print("Stop song")

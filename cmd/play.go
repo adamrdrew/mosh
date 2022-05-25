@@ -2,17 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
-	"time"
 
 	"github.com/adamrdrew/mosh/filehandler"
-	"github.com/faiface/beep"
-	"github.com/faiface/beep/flac"
-	"github.com/faiface/beep/mp3"
-	"github.com/faiface/beep/speaker"
-	"github.com/faiface/beep/vorbis"
-	"github.com/gabriel-vasile/mimetype"
 	"github.com/spf13/cobra"
 )
 
@@ -40,38 +32,6 @@ var playAlbumCommand = &cobra.Command{
 		PlaySong(songPath)
 
 	},
-}
-
-func PlaySong(path string) {
-	f, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
-
-	mtype, err := mimetype.DetectFile(path)
-
-	var streamer beep.StreamSeekCloser
-	var format beep.Format
-	var decErr error
-
-	switch mtype.String() {
-	case "audio/flac":
-		streamer, format, decErr = flac.Decode(f)
-	case "audio/mpeg":
-		streamer, format, decErr = mp3.Decode(f)
-	case "audio/ogg":
-		streamer, format, decErr = vorbis.Decode(f)
-	default:
-		return
-	}
-
-	if decErr != nil {
-		panic(decErr)
-	}
-	defer streamer.Close()
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	speaker.Play(streamer)
-	select {}
 }
 
 var playSongCommand = &cobra.Command{
