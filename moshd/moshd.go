@@ -33,23 +33,22 @@ func (p *Player) Play() {
 }
 
 func (p *Player) PlaySong(path string) {
-	f, err := os.Open(path)
+	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
 	}
 
 	mtype, err := mimetype.DetectFile(path)
 
-	var format beep.Format
 	var decErr error
-
+	var format beep.Format
 	switch mtype.String() {
 	case "audio/flac":
-		p.Streamer, format, decErr = flac.Decode(f)
+		p.Streamer, format, decErr = flac.Decode(file)
 	case "audio/mpeg":
-		p.Streamer, format, decErr = mp3.Decode(f)
+		p.Streamer, format, decErr = mp3.Decode(file)
 	case "audio/ogg":
-		p.Streamer, format, decErr = vorbis.Decode(f)
+		p.Streamer, format, decErr = vorbis.Decode(file)
 	default:
 		return
 	}
@@ -90,6 +89,9 @@ func main() {
 	log.Print("moshd started")
 
 	player = Player{}
+
+	defaultSampleRate := beep.SampleRate(44100)
+	speaker.Init(defaultSampleRate, defaultSampleRate.N(time.Second/10))
 
 	startListener()
 }
