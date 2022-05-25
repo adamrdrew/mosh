@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(playCommand)
-	searchCommand.AddCommand(playAlbumCommand)
-	searchCommand.AddCommand(playSongCommand)
+	//rootCmd.AddCommand(playCommand)
+	//searchCommand.AddCommand(playAlbumCommand)
+	//searchCommand.AddCommand(playSongCommand)
 }
 
 var playCommand = &cobra.Command{
