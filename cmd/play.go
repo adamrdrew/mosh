@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/adamrdrew/mosh/filehandler"
+	"github.com/adamrdrew/mosh/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -25,12 +24,13 @@ var playAlbumCommand = &cobra.Command{
 	Short: "Play an album",
 	Long:  `Play an album by ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		server := getServer()
-		songs := server.GetSongsForAlbum(strings.Join(args, " "))
-		fileHandler := filehandler.GetFileHandler(server, songs[0])
-		songPath := fileHandler.GetTrackFile()
-		PlaySong(songPath)
-
+		ipc.SendMessageToDaemon(ipc.Message{
+			Command: "queue-album",
+			Data:    args[0],
+		})
+		ipc.SendMessageToDaemon(ipc.Message{
+			Command: "play-queue",
+		})
 	},
 }
 
