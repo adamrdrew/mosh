@@ -1,4 +1,6 @@
-# MOSH
+![Alt text](docs/mosh_logo.png "a title")
+
+---
 Mosh (Music On Shell) is a Plex music player for the command line. Think of it like PlexAMP for the shell. Requires that you have a Plex server running that is connected to the internet and is set up with plex.tv auth (Plex account) and remote access.
 
 
