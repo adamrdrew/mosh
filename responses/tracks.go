@@ -35,6 +35,10 @@ type ResponseTrack struct {
 	Index string `xml:"index,attr"`
 }
 
+func (r *ResponseTrack) GetPath() string {
+	return r.Media.Part.Key
+}
+
 type ResponseTracksMediaContainer struct {
 	XMLName xml.Name        `xml:"MediaContainer"`
 	Tracks  []ResponseTrack `xml:"Track"`

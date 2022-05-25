@@ -118,3 +118,7 @@ func (s *Server) GetSongsForAlbum(albumID string) []responses.ResponseTrack {
 
 	return serverResponse.Tracks
 }
+
+func (s *Server) MakeURL(part string) string {
+	return s.PlexURLs.MakeURL(part)
+}

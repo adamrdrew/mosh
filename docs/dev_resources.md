@@ -51,3 +51,5 @@ http://<IP>:<PORT>/library/sections<LIBRARY KEY>albums?title=pony&X-Plex-Token=<
 * [Plex TV URLs](https://github.com/Arcanemagus/plex-api/wiki/Plex.tv#urls)
 * [Beep](https://github.com/faiface/beep)
 * [Beep Example](https://github.com/faiface/beep/wiki/Hello,-Beep!)
+* [Go Pretty Progress](https://github.com/jedib0t/go-pretty/tree/main/progress)
+* [Go Pretty Table](https://github.com/jedib0t/go-pretty/tree/main/table)

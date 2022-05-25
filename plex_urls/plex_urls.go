@@ -27,12 +27,11 @@ func (u *PlexURLs) Server() string {
 }
 
 func (u *PlexURLs) GetLibraries() string {
-	return u.makeURL(RT_LIBRARIES)
+	return u.MakeURL(RT_LIBRARIES)
 }
 
 func (u *PlexURLs) GetChildren(query string) string {
 	return u.withToken(u.Server() + RT_METADATA + query + RT_CHILDREN)
-
 }
 
 func (u *PlexURLs) SearchArstists(query string) string {
@@ -47,7 +46,7 @@ func (u *PlexURLs) libraryQuery(endpoint string, query string) string {
 	return u.Server() + RT_LIBRARIES + "/" + u.Config.Library + endpoint + query + "&" + XPLEXTOKEN + u.Config.Token
 }
 
-func (u *PlexURLs) makeURL(route string) string {
+func (u *PlexURLs) MakeURL(route string) string {
 	return u.withToken(u.Server() + route)
 }
 
