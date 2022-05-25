@@ -4,13 +4,67 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/adamrdrew/mosh/ipc"
+	"github.com/sevlyar/go-daemon"
 )
 
-type MessageHandler struct {
+//Entrypoint for the daemon
+func main() {
+	cntxt := &daemon.Context{
+		PidFileName: "moshd.pid",
+		PidFilePerm: 0644,
+		LogFileName: "moshd.log",
+		LogFilePerm: 0640,
+		WorkDir:     "./",
+		Umask:       027,
+	}
+
+	d, err := cntxt.Reborn()
+	if err != nil {
+		log.Fatal("Unable to run: ", err)
+	}
+	if d != nil {
+		return
+	}
+	defer cntxt.Release()
+
+	log.Print("- - - - - - - - - - - - - - -")
+	log.Print("moshd started")
+
+	startListener()
 }
 
-func (m *MessageHandler) Handle(message IPCMessage) IPCResponse {
-	response := IPCResponse{}
+//Listens for HTTP requests on port 9666 and passes them off to httpListener
+func startListener() {
+	log.Print("Starting listener....")
+	http.HandleFunc("/listener", httpListener)
+	log.Fatal(http.ListenAndServe(":9666", nil))
+}
+
+//The HTTP handler function. Gets messages, decodes them, and sends them through
+//the message handler.
+func httpListener(w http.ResponseWriter, r *http.Request) {
+	log.Print("Message recieved...")
+
+	var message ipc.Message
+
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&message)
+	if err != nil {
+		log.Fatal("Message decode failed: ", err)
+	}
+
+	response := handleMessage(message)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+
+}
+
+//Takes a message and dispatches to the right code to handle it
+func handleMessage(message ipc.Message) ipc.Response {
+	response := ipc.Response{}
 	response.Code = "OK"
 
 	switch message.Command {
@@ -38,49 +92,4 @@ func (m *MessageHandler) Handle(message IPCMessage) IPCResponse {
 	}
 
 	return response
-}
-
-type IPCMessage struct {
-	Command string `json:"command"`
-	Data    string `json:"data"`
-}
-
-type IPCResponse struct {
-	Code        string `json:"code"`
-	Message     string `json:"message"`
-	Status      string `json:"status"`
-	Song        string `json:"song"`
-	Artist      string `json:"artist"`
-	Album       string `json:"album"`
-	CurrentTime string `json:"currenttime"`
-	TotalTime   string `json:"totaltime"`
-}
-
-func Listener(w http.ResponseWriter, r *http.Request) {
-	log.Print("Message recieved...")
-
-	var message IPCMessage
-
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&message)
-	if err != nil {
-		log.Fatal("Message decode failed: ", err)
-	}
-
-	handler := MessageHandler{}
-	response := handler.Handle(message)
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
-
-}
-
-func main() {
-	// Add handle funcs for 3 pages.
-	http.HandleFunc("/listener", Listener)
-
-	log.Print("Starting listener....")
-
-	// Run the web server.
-	log.Fatal(http.ListenAndServe(":9666", nil))
 }

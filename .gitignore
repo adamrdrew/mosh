@@ -15,3 +15,5 @@
 # vendor/
 
 config/config.yaml
+moshd/moshd.log
+moshd/moshd.pid
