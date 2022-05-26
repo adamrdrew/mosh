@@ -55,6 +55,7 @@ func main() {
 func startListener() {
 	log.Print("Starting listener....")
 	http.HandleFunc("/listener", httpListener)
+	//Number of the beast... with a 9 in front of it.
 	log.Fatal(http.ListenAndServe(":9666", nil))
 }
 
