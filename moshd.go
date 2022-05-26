@@ -70,8 +70,18 @@ func (p *Player) SetQueue(queue []responses.ResponseTrack) {
 	p.MaxIndex = len(queue) - 1
 }
 
-func (p *Player) QueueAlbum(albumID string) {
-	p.SetQueue(p.Server.GetSongsForAlbum(albumID))
+func (p *Player) QueueAlbum(albumID string) ipc.Response {
+	response := ipc.Response{}
+	response.Code = "OK"
+	songs := p.Server.GetSongsForAlbum(albumID)
+	if len(songs) == 0 {
+		response.Code = "NOTFOUND"
+		response.Message = "Album not found"
+		return response
+	}
+	p.SetQueue(songs)
+	response.Message = songs[0].ParentTitle + " by " + songs[0].GrandParentTitle + " is now playing."
+	return response
 }
 
 func (p *Player) PlayQueue() {
@@ -196,7 +206,7 @@ func handleMessage(message ipc.Message) ipc.Response {
 
 	switch message.Command {
 	case "queue-album":
-		player.QueueAlbum(message.Data)
+		response = player.QueueAlbum(message.Data)
 	case "play-queue":
 		go player.PlayQueue()
 	case "now-playing":
