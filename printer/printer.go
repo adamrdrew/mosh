@@ -34,6 +34,16 @@ func Albums(source []responses.ResponseAlbumDirectory) {
 	t.Render()
 }
 
+func Shortcuts(cuts map[string]string) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Shortcut", "ID"})
+	for key, val := range cuts {
+		t.AppendRow(table.Row{key, val})
+	}
+	t.Render()
+}
+
 func Songs(source []responses.ResponseTrack) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
