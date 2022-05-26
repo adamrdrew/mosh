@@ -314,6 +314,7 @@ func handleMessage(message ipc.Message) ipc.Response {
 		response = player.QueueAlbum(message.Data)
 	case "play-queue":
 		go player.PlayQueue()
+		response.Message = "Playing: " + player.NowPlayingSongString()
 	case "now-playing":
 		response = player.GetNowPlaying()
 	case "stop":
