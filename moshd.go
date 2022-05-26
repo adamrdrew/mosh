@@ -26,7 +26,7 @@ func main() {
 	fmt.Println("Starting moshd...")
 	fmt.Println(os.Getenv("MOSH_CONFIG_DIR"))
 	cntxt := &daemon.Context{
-		PidFileName: "/tmp/moshd.pid",
+		PidFileName: config.GetPidDir() + "moshd.pid",
 		PidFilePerm: 0644,
 		LogFileName: config.GetLogir() + "moshd.log",
 		LogFilePerm: 0640,
@@ -60,7 +60,7 @@ func startListener() {
 	log.Print("Starting listener....")
 	http.HandleFunc("/listener", httpListener)
 	//Number of the beast... with a 9 in front of it.
-	log.Fatal(http.ListenAndServe(":9666", nil))
+	log.Fatal(http.ListenAndServe(":"+config.GetPort(), nil))
 }
 
 //The HTTP handler function. Gets messages, decodes them, and sends them through

@@ -7,20 +7,36 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func GetConfigDir() string {
-	configDir := os.Getenv("MOSH_CONFIG_DIR")
-	if configDir == "" {
-		configDir = "mosh_tmp"
+func GetPort() string {
+	port := os.Getenv("MOSH_PORT")
+	if port == "" {
+		port = "9666"
 	}
-	return configDir + "/"
+	return port
+}
+
+func GetPidDir() string {
+	dir := os.Getenv("MOSH_PID_DIR")
+	if dir == "" {
+		dir = "/tmp"
+	}
+	return dir + "/"
+}
+
+func GetConfigDir() string {
+	dir := os.Getenv("MOSH_CONFIG_DIR")
+	if dir == "" {
+		dir = "/etc/mosh/"
+	}
+	return dir + "/"
 }
 
 func GetLogir() string {
-	configDir := os.Getenv("MOSH_LOG_DIR")
-	if configDir == "" {
-		configDir = "mosh_tmp"
+	dir := os.Getenv("MOSH_LOG_DIR")
+	if dir == "" {
+		dir = "/var/log/mosh"
 	}
-	return configDir + "/"
+	return dir + "/"
 }
 
 func GetConfig() Config {

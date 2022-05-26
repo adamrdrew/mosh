@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/adamrdrew/mosh/config"
 )
 
 //The type we use for sending messages to moshd
@@ -48,7 +50,7 @@ func maybePanic(err error) {
 
 func daemonTransport(message Message) []byte {
 	host := "http://0.0.0.0"
-	port := "9666"
+	port := config.GetPort()
 	route := "listener"
 	url := host + ":" + port + "/" + route
 

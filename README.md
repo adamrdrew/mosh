@@ -257,3 +257,8 @@ If you make a mistake `shortcuts delete` has you covered:
 | tdep     | 2209  |
 +----------+-------+
 ```
+
+## Errors and Help
+
+## Development
+Running mosh during development is a little weird for now. Hoping for a better solution over time. When running mosh in development you don't want your dev version stomping over your production version config, pid file, port, etc. Mosh uses environment variables to handle all that stuff, but changing env vars from prod to dev globally would stink.
