@@ -10,6 +10,7 @@ func init() {
 	rootCmd.AddCommand(lsCommand)
 	lsCommand.AddCommand(lsArtistCommand)
 	lsCommand.AddCommand(lsAlbumCommand)
+	lsCommand.AddCommand(lsShortcutCommand)
 }
 
 var lsCommand = &cobra.Command{
@@ -39,5 +40,15 @@ var lsAlbumCommand = &cobra.Command{
 		query := shortcuts.Resolve(args[0])
 		songs := server.GetSongsForAlbum(query)
 		printer.Songs(songs)
+	},
+}
+
+var lsShortcutCommand = &cobra.Command{
+	Use:   "shortcuts",
+	Short: "List all shortcuts",
+	Long:  `List all shortcuts in a table`,
+	Run: func(cmd *cobra.Command, args []string) {
+		cuts := shortcuts.GetAll()
+		printer.Shortcuts(cuts)
 	},
 }

@@ -182,3 +182,69 @@ Playback stopped.
 Playing: Violet by Hole from the album Live Through This
 
 ```
+
+## Shortcuts
+ID numbers can be a drag when you are dealing with stuff you listen to a lot. Shortcuts to the rescue! Use shortcuts to create easy to remember and type keys for your favorite artists or albums. Then, when you want to play or explore those simply use the shortcut instead of looking up the ID.
+
+```
+ $ mosh search artist dillinger
++------+---------------------------+
+| ID   | TITLE                     |
++------+---------------------------+
+| 2209 | The Dillinger Escape Plan |
++------+---------------------------+
+ 
+ $ mosh shortcuts add tdep 2209
+ 
+ $ mosh ls artist tdep
++-------+------------------+---------------------------+
+| ID    | TITLE            | ARTIST                    |
++-------+------------------+---------------------------+
+| 74932 | Ire Works        | The Dillinger Escape Plan |
+| 74920 | Miss Machine     | The Dillinger Escape Plan |
+| 74909 | Option Paralysis | The Dillinger Escape Plan |
++-------+------------------+---------------------------+
+ 
+ $ mosh shortcuts add ireworks 74932
+ 
+ $ mosh play album ireworks
+Ire Works by The Dillinger Escape Plan is now playing.
+
+ $ mosh shortcuts list
++----------+-------+
+| SHORTCUT | ID    |
++----------+-------+
+| tdep     | 2209  |
+| ireworks | 74932 |
+| nin      | 328   |
++----------+-------+
+```
+
+*Note: You can use `mosh ls shortcuts` to view shortcuts as well as `mosh shortcuts list`.* 
+
+If you make a mistake `shortcuts delete` has you covered:
+
+```
+ $ mosh shortcuts add oopsmistake 74932
+
+  $ mosh shortcuts list
++-------------+-------+
+| SHORTCUT    | ID    |
++-------------+-------+
+| nin         | 328   |
+| oopsmistake | 74932 |
+| tdep        | 2209  |
+| ireworks    | 74932 |
++-------------+-------+
+ 
+ $ mosh shortcuts delete oopsmistake
+ 
+ $ mosh shortcuts list
++----------+-------+
+| SHORTCUT | ID    |
++----------+-------+
+| ireworks | 74932 |
+| nin      | 328   |
+| tdep     | 2209  |
++----------+-------+
+```

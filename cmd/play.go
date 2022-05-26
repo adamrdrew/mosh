@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/adamrdrew/mosh/ipc"
+	"github.com/adamrdrew/mosh/shortcuts"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,7 @@ var playAlbumCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "queue-album",
-			Data:    args[0],
+			Data:    shortcuts.Resolve(args[0]),
 		})
 		response := responseList.First()
 		fmt.Println(response.Message)
