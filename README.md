@@ -139,3 +139,46 @@ Use the `mosh get playing` command to see what's playing:
 5:23 / 5:85 [#################---] 89 %
 
 ```
+
+Use the `most get queue` command to see the entire play queue:
+
+```shell
+$ mosh get queue
++---------+-------+------------------------------+-------------------+--------+
+| PLAYING | TRACK | TITLE                        | ALBUM             | ARTIST |
++---------+-------+------------------------------+-------------------+--------+
+| X       | 1     | Violet                       | Live Through This | Hole   |
+|         | 2     | Miss World                   | Live Through This | Hole   |
+|         | 3     | Plump                        | Live Through This | Hole   |
+|         | 4     | Asking for It                | Live Through This | Hole   |
+|         | 5     | Jennifer’s Body              | Live Through This | Hole   |
+|         | 6     | Doll Parts                   | Live Through This | Hole   |
+|         | 7     | Credit in the Straight World | Live Through This | Hole   |
+|         | 8     | Softer, Softest              | Live Through This | Hole   |
+|         | 9     | She Walks on Me              | Live Through This | Hole   |
+|         | 10    | I Think That I Would Die     | Live Through This | Hole   |
+|         | 11    | Gutless                      | Live Through This | Hole   |
+|         | 12    | Olympia                      | Live Through This | Hole   |
++---------+-------+------------------------------+-------------------+--------+
+```
+
+## Playback Controls
+You can stop, play, and skip around the play queue with the `mosh control` commands:
+
+```
+ $ mosh control next
+Went forward. Next up: Miss World by Hole from the album Live Through This
+
+ $ mosh control next
+Went forward. Next up: Plump by Hole from the album Live Through This
+
+ $ mosh control back
+Went back. Next up: Miss World by Hole from the album Live Through This
+
+ $ mosh control stop
+Playback stopped.
+
+ $ mosh control play
+Playing: Violet by Hole from the album Live Through This
+
+```
