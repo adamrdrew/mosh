@@ -31,6 +31,7 @@ type Player struct {
 	MaxIndex     int
 	Server       server.Server
 	Config       config.Config
+	StopPlayLoop bool
 }
 
 func (p *Player) Init() {
@@ -38,6 +39,7 @@ func (p *Player) Init() {
 	p.Server = server.GetServer(&p.Config)
 	p.CurrentIndex = 0
 	p.MaxIndex = 0
+	p.StopPlayLoop = false
 }
 
 func (p *Player) GetNowPlaying() ipc.Response {
@@ -86,16 +88,22 @@ func (p *Player) QueueAlbum(albumID string) ipc.Response {
 
 func (p *Player) PlayQueue() {
 	for index, songID := range p.Queue {
+		if p.StopPlayLoop {
+			p.StopPlayLoop = false
+			break
+		}
 		p.CurrentIndex = index
 		fileHandler := filehandler.GetFileHandler(p.Server, songID)
 		path := fileHandler.GetTrackFile()
 		p.PlaySongFile(path)
-		log.Print("Playing: ", path)
 	}
 }
 
 func (p *Player) StopQueue() {
-
+	p.StopPlayLoop = true
+	p.CurrentIndex = 0
+	p.Streamer.Close()
+	p.Streamer = nil
 }
 
 func (p *Player) PlaySongFile(path string) {
@@ -126,6 +134,7 @@ func (p *Player) PlaySongFile(path string) {
 
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
+	log.Print("Playing: ", path)
 	done := make(chan bool)
 	speaker.Play(beep.Seq(p.Streamer, beep.Callback(func() {
 		done <- true
