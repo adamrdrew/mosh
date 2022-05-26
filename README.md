@@ -70,7 +70,6 @@ If you want to see the albums by an artist or the songs on an album you can use 
 
 ```shell
  $ mosh search artist pantera
-Welcome to MOSH! 🎧💿🐧
 +--------+---------+
 | ID     | TITLE   |
 +--------+---------+
@@ -78,7 +77,6 @@ Welcome to MOSH! 🎧💿🐧
 +--------+---------+
 
  $ mosh ls artist 100034
-Welcome to MOSH! 🎧💿🐧
 +--------+------------------------------+---------+
 | ID     | TITLE                        | ARTIST  |
 +--------+------------------------------+---------+
@@ -90,7 +88,6 @@ Welcome to MOSH! 🎧💿🐧
 +--------+------------------------------+---------+
 
  $ mosh ls album 100062
-Welcome to MOSH! 🎧💿🐧
 +--------+-------+------------------------------+-------------------------+---------+
 | ID     | TRACK | TITLE                        | ALBUM                   | ARTIST  |
 +--------+-------+------------------------------+-------------------------+---------+
@@ -108,6 +105,37 @@ Welcome to MOSH! 🎧💿🐧
 +--------+-------+------------------------------+-------------------------+---------+
 ```
 
+## The Mosh Daemon - moshd
+So far we've been looking at the mosh CLI and running queries against Plex. In order to play music we'll need to run `moshd`: The Mosh Daemon. Start `moshd` and it'll fork into the background. There's nothing else to set up or think about.
 
+**Important: You need to have run `mosh setup` before you can start `moshd`**
 
+```shell
+$ ./moshd
+Starting moshd...
 
+$
+```
+Now that `moshd` is running we can look at playing some music!
+
+## Play an Album
+Use the `mosh play album` command to play an album:
+
+```bash
+ $ mosh play album 74594
+Hesitation Marks by Nine Inch Nails is now playing.
+```
+
+## See what's playing
+Use the `mosh get playing` command to see what's playing:
+
+```shell
+ $ mosh get playing
++-----------+-----------------+------------------+
+| TRACK     | ARTIST          | ALBUM            |
++-----------+-----------------+------------------+
+| Copy of a | Nine Inch Nails | Hesitation Marks |
++-----------+-----------------+------------------+
+5:23 / 5:85 [#################---] 89 %
+
+```

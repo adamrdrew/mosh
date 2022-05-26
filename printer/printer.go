@@ -44,7 +44,23 @@ func Songs(source []responses.ResponseTrack) {
 	t.Render()
 }
 
-func NowPlaying(source ipc.Response) {
+func PlayQueue(source ipc.Response) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Playing", "Track", "Title", "Album", "Artist"})
+	for _, track := range source.Responses {
+		nowPlaying := ""
+		if track.Code == "PLAYING" {
+			nowPlaying = "X"
+		} else {
+			nowPlaying = ""
+		}
+		t.AppendRow(table.Row{nowPlaying, track.Message, track.Song, track.Album, track.Artist})
+	}
+	t.Render()
+}
+
+func NowPlaying(source ipc.ResponseItem) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"Track", "Artist", "Album"})

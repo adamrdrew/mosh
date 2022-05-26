@@ -24,10 +24,11 @@ var playAlbumCommand = &cobra.Command{
 	Short: "Play an album",
 	Long:  `Play an album by ID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		response := ipc.SendMessageToDaemon(ipc.Message{
+		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "queue-album",
 			Data:    args[0],
 		})
+		response := responseList.First()
 		fmt.Println(response.Message)
 		if response.Code == "OK" {
 			ipc.SendMessageToDaemon(ipc.Message{

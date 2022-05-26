@@ -4,6 +4,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -21,6 +22,7 @@ var musicPlayer player.Player
 
 //Entrypoint for the daemon
 func main() {
+	fmt.Println("Starting moshd...")
 	cntxt := &daemon.Context{
 		PidFileName: "moshd/moshd.pid",
 		PidFilePerm: 0644,
@@ -87,23 +89,27 @@ func getServer() server.Server {
 //Takes a message and dispatches to the right code to handle it
 func handleMessage(message ipc.Message) ipc.Response {
 	response := ipc.Response{}
-	response.Code = "OK"
+	responseItem := ipc.ResponseItem{}
+	responseItem.Code = "OK"
 
 	switch message.Command {
 	case "queue-album":
-		response = musicPlayer.QueueAlbum(message.Data)
+		responseItem = musicPlayer.QueueAlbum(message.Data)
 	case "play-queue":
 		go musicPlayer.PlayQueue()
-		response.Message = "Playing: " + musicPlayer.NowPlayingSongString()
+		responseItem.Message = "Playing: " + musicPlayer.NowPlayingSongString()
 	case "now-playing":
-		response = musicPlayer.GetNowPlaying()
+		responseItem = musicPlayer.GetNowPlaying()
+	case "get-queue":
+		return musicPlayer.GetPlayQueue()
 	case "stop":
-		response = musicPlayer.StopQueue()
+		responseItem = musicPlayer.StopQueue()
 	case "back":
-		response = musicPlayer.GoBackInQueue()
+		responseItem = musicPlayer.GoBackInQueue()
 	case "next":
-		response = musicPlayer.GoForwardInQueue()
+		responseItem = musicPlayer.GoForwardInQueue()
 	}
 
+	response.Add(responseItem)
 	return response
 }

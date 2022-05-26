@@ -37,9 +37,44 @@ func (p *Player) Init() {
 	p.StopPlayLoop = false
 }
 
-func (p *Player) GetNowPlaying() ipc.Response {
+func (p *Player) GetPlayQueue() ipc.Response {
+	response := ipc.Response{}
+
 	if len(p.Queue) == 0 {
-		return ipc.Response{
+		item := ipc.ResponseItem{
+			Song:        "",
+			Album:       "",
+			Artist:      "",
+			TotalTime:   "0",
+			CurrentTime: "0",
+			Message:     "Nothing in queue. I feel empty.",
+			Code:        "EMPTY",
+		}
+		response.Add(item)
+		return response
+	}
+
+	for i, track := range p.Queue {
+		nowPlaying := "NOTPLAYING"
+		if i == p.CurrentIndex {
+			nowPlaying = "PLAYING"
+		}
+		item := ipc.ResponseItem{
+			Song:    track.Title,
+			Album:   track.ParentTitle,
+			Artist:  track.GrandParentTitle,
+			Message: strconv.FormatInt(int64(i+1), 10),
+			Code:    nowPlaying,
+		}
+		response.Add(item)
+	}
+
+	return response
+}
+
+func (p *Player) GetNowPlaying() ipc.ResponseItem {
+	if len(p.Queue) == 0 {
+		return ipc.ResponseItem{
 			Song:        "",
 			Album:       "",
 			Artist:      "",
@@ -50,7 +85,7 @@ func (p *Player) GetNowPlaying() ipc.Response {
 		}
 	}
 	track := p.Queue[p.CurrentIndex]
-	return ipc.Response{
+	return ipc.ResponseItem{
 		Song:        track.Title,
 		Album:       track.ParentTitle,
 		Artist:      track.GrandParentTitle,
@@ -67,8 +102,8 @@ func (p *Player) SetQueue(queue []responses.ResponseTrack) {
 	p.MaxIndex = len(queue) - 1
 }
 
-func (p *Player) QueueAlbum(albumID string) ipc.Response {
-	response := ipc.Response{}
+func (p *Player) QueueAlbum(albumID string) ipc.ResponseItem {
+	response := ipc.ResponseItem{}
 	response.Code = "OK"
 	songs := p.Server.GetSongsForAlbum(albumID)
 	if len(songs) == 0 {
@@ -105,20 +140,20 @@ func (p *Player) PlayQueue() {
 	}
 }
 
-func (p *Player) StopQueue() ipc.Response {
+func (p *Player) StopQueue() ipc.ResponseItem {
 	p.StopPlayLoop = true
 	p.CurrentIndex = 0
 	p.Streamer.Close()
 	p.Streamer = nil
-	return ipc.Response{
+	return ipc.ResponseItem{
 		Status:  "OK",
 		Message: "Playback stopped.",
 	}
 }
 
-func (p *Player) GoBackInQueue() ipc.Response {
+func (p *Player) GoBackInQueue() ipc.ResponseItem {
 	if len(p.Queue) == 0 {
-		return ipc.Response{
+		return ipc.ResponseItem{
 			Status:  "NOPE",
 			Message: "Nothing in queue",
 		}
@@ -126,7 +161,7 @@ func (p *Player) GoBackInQueue() ipc.Response {
 	currentIndex := p.CurrentIndex
 	log.Println("GoBackInQueue currentIndex", currentIndex)
 	if currentIndex == 0 {
-		return ipc.Response{
+		return ipc.ResponseItem{
 			Status:  "NOPE",
 			Message: "Already at first track",
 		}
@@ -135,7 +170,7 @@ func (p *Player) GoBackInQueue() ipc.Response {
 	p.Streamer.Close()
 	p.Streamer = nil
 	if !p.waitForPlayThreadToDie() {
-		return ipc.Response{
+		return ipc.ResponseItem{
 			Status:  "ERROR",
 			Message: "Stopping the play queue thread failed.",
 		}
@@ -144,22 +179,22 @@ func (p *Player) GoBackInQueue() ipc.Response {
 	p.CurrentIndex = currentIndex - 1
 	log.Println("GoBackInQueue p.CurrentIndex", p.CurrentIndex)
 	go p.PlayQueue()
-	return ipc.Response{
+	return ipc.ResponseItem{
 		Status:  "OK",
 		Message: "Went back. Next up: " + p.NowPlayingSongString(),
 	}
 }
 
-func (p *Player) GoForwardInQueue() ipc.Response {
+func (p *Player) GoForwardInQueue() ipc.ResponseItem {
 	if len(p.Queue) == 0 {
-		return ipc.Response{
+		return ipc.ResponseItem{
 			Status:  "NOPE",
 			Message: "Nothing in queue",
 		}
 	}
 	currentIndex := p.CurrentIndex
 	if currentIndex == p.MaxIndex {
-		return ipc.Response{
+		return ipc.ResponseItem{
 			Status:  "NOPE",
 			Message: "Already at last track",
 		}
@@ -168,14 +203,14 @@ func (p *Player) GoForwardInQueue() ipc.Response {
 	p.Streamer.Close()
 	p.Streamer = nil
 	if !p.waitForPlayThreadToDie() {
-		return ipc.Response{
+		return ipc.ResponseItem{
 			Status:  "ERROR",
 			Message: "Stopping the play queue thread failed.",
 		}
 	}
 	p.CurrentIndex = currentIndex + 1
 	go p.PlayQueue()
-	return ipc.Response{
+	return ipc.ResponseItem{
 		Status:  "OK",
 		Message: "Went forward. Next up: " + p.NowPlayingSongString(),
 	}
