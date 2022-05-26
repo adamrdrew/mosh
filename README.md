@@ -6,19 +6,19 @@ Mosh (Music On Shell) is a Plex music player for the command line. Think of it l
 For a compiled release you shouldn't need anything, just the executables. If you are building from source or hacking you'll need the ALSA development libs:
 
 RHEL / Fedora:
-```bash
+```
 $ sudo yum install alsa-lib-devel
 ```
 
 Debian / Ubuntu:
-```bash
+```
 $ sudo apt-get install libasound2-dev
 ```
 
 ## Setup
 Mosh needs to authenticate to your Plex server and access a music library on it. The `mosh setup` command handles all of this for you. The steps are run `mosh setup`, click the link it provides you to authenticate to Plex, and then select the library you want to use from the text menu.
 
-```shell
+```
  $ mosh setup
 Welcome to MOSH! 🎧💿🐧
 🔑 Checking Plex authorization status...
@@ -42,7 +42,7 @@ We are ready to ROCK!!!!
 ## Searching
 Before you can play something you need to find it. You can use the `mosh search` command along with the `artist` and `album` subcommands to search for albums or artists:
 
-```shell
+```
  $ mosh search artist dillinger
 Welcome to MOSH! 🎧💿🐧
 +------+---------------------------+
@@ -68,7 +68,7 @@ Notice the `ID` column in the search output. These ID numbers are how you refer 
 ## Listing - the ls command
 If you want to see the albums by an artist or the songs on an album you can use the `mosh ls` command to list them.
 
-```shell
+```
  $ mosh search artist pantera
 +--------+---------+
 | ID     | TITLE   |
@@ -110,7 +110,7 @@ So far we've been looking at the mosh CLI and running queries against Plex. In o
 
 **Important: You need to have run `mosh setup` before you can start `moshd`**
 
-```shell
+```
 $ ./moshd
 Starting moshd...
 
@@ -121,7 +121,7 @@ Now that `moshd` is running we can look at playing some music!
 ## Play an Album
 Use the `mosh play album` command to play an album:
 
-```bash
+```
  $ mosh play album 74594
 Hesitation Marks by Nine Inch Nails is now playing.
 ```
@@ -129,7 +129,7 @@ Hesitation Marks by Nine Inch Nails is now playing.
 ## See what's playing
 Use the `mosh get playing` command to see what's playing:
 
-```shell
+```
  $ mosh get playing
 +-----------+-----------------+------------------+
 | TRACK     | ARTIST          | ALBUM            |
@@ -142,7 +142,7 @@ Use the `mosh get playing` command to see what's playing:
 
 Use the `most get queue` command to see the entire play queue:
 
-```shell
+```
 $ mosh get queue
 +---------+-------+------------------------------+-------------------+--------+
 | PLAYING | TRACK | TITLE                        | ALBUM             | ARTIST |
