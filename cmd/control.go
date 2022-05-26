@@ -11,6 +11,8 @@ func init() {
 	rootCmd.AddCommand(controlCommand)
 	controlCommand.AddCommand(controlStopCommand)
 	controlCommand.AddCommand(controlPlayCommand)
+	controlCommand.AddCommand(controlNextCommand)
+	controlCommand.AddCommand(controlBackCommand)
 }
 
 var controlCommand = &cobra.Command{
@@ -38,6 +40,30 @@ var controlPlayCommand = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		response := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "play-queue",
+		})
+		fmt.Println(response.Message)
+	},
+}
+
+var controlNextCommand = &cobra.Command{
+	Use:   "next",
+	Short: "Skip to the next track in queue",
+	Long:  `Skip to the next track in queue`,
+	Run: func(cmd *cobra.Command, args []string) {
+		response := ipc.SendMessageToDaemon(ipc.Message{
+			Command: "next",
+		})
+		fmt.Println(response.Message)
+	},
+}
+
+var controlBackCommand = &cobra.Command{
+	Use:   "back",
+	Short: "Skip to the previous track in queue",
+	Long:  `Skip to the previous track in queue`,
+	Run: func(cmd *cobra.Command, args []string) {
+		response := ipc.SendMessageToDaemon(ipc.Message{
+			Command: "back",
 		})
 		fmt.Println(response.Message)
 	},

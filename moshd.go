@@ -86,24 +86,120 @@ func (p *Player) QueueAlbum(albumID string) ipc.Response {
 	return response
 }
 
+func (p *Player) NowPlayingSongString() string {
+	song := p.Queue[p.CurrentIndex]
+	return song.Title + " by " + song.GrandParentTitle + " from the album " + song.ParentTitle
+}
+
 func (p *Player) PlayQueue() {
-	for index, songID := range p.Queue {
+	log.Println("PlayQueue p.CurrentIndex", p.CurrentIndex)
+	for i := p.CurrentIndex; i < p.MaxIndex; i++ {
+		log.Println("PlayQueue i at top of loop", i)
 		if p.StopPlayLoop {
 			p.StopPlayLoop = false
 			break
 		}
-		p.CurrentIndex = index
-		fileHandler := filehandler.GetFileHandler(p.Server, songID)
+		log.Println("PlayQueue p.CurrentIndex right before i", p.CurrentIndex)
+		log.Println("PlayQueue i", i)
+		p.CurrentIndex = i
+		log.Println("PlayQueue p.CurrentIndex", p.CurrentIndex)
+		song := p.Queue[i]
+		fileHandler := filehandler.GetFileHandler(p.Server, song)
 		path := fileHandler.GetTrackFile()
 		p.PlaySongFile(path)
 	}
 }
 
-func (p *Player) StopQueue() {
+func (p *Player) StopQueue() ipc.Response {
 	p.StopPlayLoop = true
 	p.CurrentIndex = 0
 	p.Streamer.Close()
 	p.Streamer = nil
+	return ipc.Response{
+		Status:  "OK",
+		Message: "Playback stopped.",
+	}
+}
+
+func (p *Player) GoBackInQueue() ipc.Response {
+	if len(p.Queue) == 0 {
+		return ipc.Response{
+			Status:  "NOPE",
+			Message: "Nothing in queue",
+		}
+	}
+	currentIndex := p.CurrentIndex
+	log.Println("GoBackInQueue currentIndex", currentIndex)
+	if currentIndex == 0 {
+		return ipc.Response{
+			Status:  "NOPE",
+			Message: "Already at first track",
+		}
+	}
+	p.StopPlayLoop = true
+	p.Streamer.Close()
+	p.Streamer = nil
+	if !p.waitForPlayThreadToDie() {
+		return ipc.Response{
+			Status:  "ERROR",
+			Message: "Stopping the play queue thread failed.",
+		}
+	}
+
+	p.CurrentIndex = currentIndex - 1
+	log.Println("GoBackInQueue p.CurrentIndex", p.CurrentIndex)
+	go p.PlayQueue()
+	return ipc.Response{
+		Status:  "OK",
+		Message: "Went back. Next up: " + p.NowPlayingSongString(),
+	}
+}
+
+func (p *Player) GoForwardInQueue() ipc.Response {
+	if len(p.Queue) == 0 {
+		return ipc.Response{
+			Status:  "NOPE",
+			Message: "Nothing in queue",
+		}
+	}
+	currentIndex := p.CurrentIndex
+	if currentIndex == p.MaxIndex {
+		return ipc.Response{
+			Status:  "NOPE",
+			Message: "Already at last track",
+		}
+	}
+	p.StopPlayLoop = true
+	p.Streamer.Close()
+	p.Streamer = nil
+	if !p.waitForPlayThreadToDie() {
+		return ipc.Response{
+			Status:  "ERROR",
+			Message: "Stopping the play queue thread failed.",
+		}
+	}
+	p.CurrentIndex = currentIndex + 1
+	go p.PlayQueue()
+	return ipc.Response{
+		Status:  "OK",
+		Message: "Went forward. Next up: " + p.NowPlayingSongString(),
+	}
+}
+
+func (p *Player) waitForPlayThreadToDie() bool {
+	retVal := false
+	start := time.Now()
+	for {
+		if p.StopPlayLoop == false {
+			retVal = true
+			break
+		}
+		if time.Since(start) >= 30*time.Second {
+			retVal = false
+			break
+		}
+	}
+	return retVal
 }
 
 func (p *Player) PlaySongFile(path string) {
@@ -221,7 +317,11 @@ func handleMessage(message ipc.Message) ipc.Response {
 	case "now-playing":
 		response = player.GetNowPlaying()
 	case "stop":
-		player.StopQueue()
+		response = player.StopQueue()
+	case "back":
+		response = player.GoBackInQueue()
+	case "next":
+		response = player.GoForwardInQueue()
 	}
 
 	return response
