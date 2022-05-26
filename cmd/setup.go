@@ -25,6 +25,8 @@ var versionCmd = &cobra.Command{
 }
 
 func setup() {
+	fmt.Println("Welcome to MOSH! 🎧💿🐧")
+
 	//Get or create and then get the local config
 	conf := config.GetConfig()
 

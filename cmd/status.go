@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/adamrdrew/mosh/ipc"
 	"github.com/adamrdrew/mosh/printer"
 	"github.com/spf13/cobra"
@@ -18,6 +20,11 @@ var statusCommand = &cobra.Command{
 		response := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "now-playing",
 		})
-		printer.NowPlaying(response)
+		if response.Code == "OK" {
+			printer.NowPlaying(response)
+		} else {
+			fmt.Println(response.Message)
+		}
+
 	},
 }

@@ -41,6 +41,17 @@ func (p *Player) Init() {
 }
 
 func (p *Player) GetNowPlaying() ipc.Response {
+	if len(p.Queue) == 0 {
+		return ipc.Response{
+			Song:        "",
+			Album:       "",
+			Artist:      "",
+			TotalTime:   "0",
+			CurrentTime: "0",
+			Message:     "Nothing playing. Kinda quiet in here.",
+			Code:        "EMPTY",
+		}
+	}
 	track := p.Queue[p.CurrentIndex]
 	return ipc.Response{
 		Song:        track.Title,
@@ -48,6 +59,8 @@ func (p *Player) GetNowPlaying() ipc.Response {
 		Artist:      track.GrandParentTitle,
 		TotalTime:   strconv.FormatInt(int64(p.Streamer.Len()), 10),
 		CurrentTime: strconv.FormatInt(int64(p.Streamer.Position()), 10),
+		Message:     "",
+		Code:        "OK",
 	}
 }
 
@@ -69,6 +82,10 @@ func (p *Player) PlayQueue() {
 		log.Print("Playing: ", path)
 		p.CurrentIndex = index
 	}
+}
+
+func (p *Player) StopQueue() {
+
 }
 
 func (p *Player) PlaySongFile(path string) {
@@ -184,7 +201,8 @@ func handleMessage(message ipc.Message) ipc.Response {
 		go player.PlayQueue()
 	case "now-playing":
 		response = player.GetNowPlaying()
-		response.Code = "OK"
+	case "stop":
+		player.StopQueue()
 		/*
 			case "set-queue":
 				response.Message = "Queue set"
