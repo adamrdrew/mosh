@@ -3,7 +3,7 @@
 Mosh (Music On Shell) is a Plex music player for the command line. Think of it like PlexAMP for the shell. Listen to music without breaking your flow. Supports playing via remote access (doesn't require you be on the same network as your Plex server) and uses Plex.tv's secure authorization.
 
 ## Requirements
-For a compiled release you shouldn't need anything, just the executables. If you are building from source or hacking you'll need the ALSA development libs:
+Before you can build mosh you'll need the alsa dev package
 
 RHEL / Fedora:
 ```
@@ -14,6 +14,12 @@ Debian / Ubuntu:
 ```
 $ sudo apt-get install libasound2-dev
 ```
+
+## Install
+
+1. Clone the repo
+2. Run `make build`
+2. Run `sudo make install`
 
 ## Setup
 Mosh needs to authenticate to your Plex server and access a music library on it. The `mosh setup` command handles all of this for you. The steps are run `mosh setup`, click the link it provides you to authenticate to Plex, and then select the library you want to use from the text menu.
