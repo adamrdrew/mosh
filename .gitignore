@@ -15,7 +15,6 @@
 # vendor/
 
 bin
-config/config.yaml
-config/shortcuts.yaml
+mosh_config
 moshd/moshd.log
 moshd/moshd.pid

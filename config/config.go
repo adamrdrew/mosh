@@ -15,7 +15,8 @@ func GetConfig() Config {
 
 const UNINITIALIZED = "UNINITIALIZED"
 
-const CONFIG_FILE = "config/config.yaml"
+const CONFIG_DIR_PART = "mosh_config/"
+const CONFIG_FILE_PART = "config.yaml"
 
 type Config struct {
 	Token   string
@@ -34,8 +35,12 @@ func (c *Config) SetToken(token string) {
 	c.Save()
 }
 
+func (c *Config) filePath() string {
+	return CONFIG_DIR_PART + CONFIG_FILE_PART
+}
+
 func (c *Config) loadYAML() {
-	yfile, err := ioutil.ReadFile(CONFIG_FILE)
+	yfile, err := ioutil.ReadFile(c.filePath())
 	if err != nil {
 		panic(err)
 	}
@@ -52,14 +57,19 @@ func (c *Config) Save() {
 		panic(err)
 	}
 
-	err2 := ioutil.WriteFile(CONFIG_FILE, data, 0)
+	err2 := ioutil.WriteFile(c.filePath(), data, 0)
 	if err2 != nil {
 		panic(err)
 	}
 }
 
 func (c *Config) createConfigFileIfNotThere() {
-	_, statErr := os.Stat(CONFIG_FILE)
+	_, statErr := os.Stat(CONFIG_DIR_PART)
+	if os.IsNotExist(statErr) {
+		os.Mkdir(CONFIG_DIR_PART, os.ModePerm)
+	}
+
+	_, statErr = os.Stat(c.filePath())
 	if !os.IsNotExist(statErr) {
 		return
 	}
@@ -76,7 +86,7 @@ func (c *Config) createConfigFileIfNotThere() {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile(CONFIG_FILE, yamlData, 0755)
+	err = ioutil.WriteFile(c.filePath(), yamlData, 0755)
 	if err != nil {
 		panic(err)
 	}

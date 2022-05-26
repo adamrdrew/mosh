@@ -1,4 +1,4 @@
-build:
+build: clean
 	mkdir bin
 	go build -o bin/mosh mosh.go
 	go build -o bin/moshd moshd.go
@@ -12,3 +12,7 @@ run-moshd:
 
 deps:
 	go get
+
+install: 
+	go install mosh.go
+	go install moshd.go

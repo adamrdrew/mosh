@@ -66,10 +66,15 @@ func loadShortcutFile() Shortcuts {
 
 const UNINITIALIZED = "UNINITIALIZED"
 
-const FILE = "config/shortcuts.yaml"
+const FILE_DIR = "mosh_config/"
+const FILE_NAME = "shortcuts.yaml"
 
 type Shortcuts struct {
 	Map map[string]string
+}
+
+func (c *Shortcuts) filePath() string {
+	return FILE_DIR + FILE_NAME
 }
 
 func (c *Shortcuts) Load() {
@@ -83,14 +88,14 @@ func (c *Shortcuts) Save() {
 		panic(err)
 	}
 
-	err2 := ioutil.WriteFile(FILE, data, 0)
+	err2 := ioutil.WriteFile(c.filePath(), data, 0)
 	if err2 != nil {
 		panic(err)
 	}
 }
 
 func (c *Shortcuts) loadYAML() {
-	yfile, err := ioutil.ReadFile(FILE)
+	yfile, err := ioutil.ReadFile(c.filePath())
 	if err != nil {
 		panic(err)
 	}
@@ -102,7 +107,12 @@ func (c *Shortcuts) loadYAML() {
 }
 
 func (c *Shortcuts) createShortcutsFileIfNotThere() {
-	_, statErr := os.Stat(FILE)
+	_, statErr := os.Stat(FILE_DIR)
+	if os.IsNotExist(statErr) {
+		os.Mkdir(FILE_DIR, os.ModePerm)
+	}
+
+	_, statErr = os.Stat(c.filePath())
 	if !os.IsNotExist(statErr) {
 		return
 	}
@@ -116,7 +126,7 @@ func (c *Shortcuts) createShortcutsFileIfNotThere() {
 		panic(err)
 	}
 
-	err = ioutil.WriteFile(FILE, yamlData, 0755)
+	err = ioutil.WriteFile(c.filePath(), yamlData, 0755)
 	if err != nil {
 		panic(err)
 	}
