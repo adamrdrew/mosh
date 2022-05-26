@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/adamrdrew/mosh/config"
 	"gopkg.in/yaml.v2"
 )
 
@@ -65,8 +66,6 @@ func loadShortcutFile() Shortcuts {
 }
 
 const UNINITIALIZED = "UNINITIALIZED"
-
-const FILE_DIR = "mosh_config/"
 const FILE_NAME = "shortcuts.yaml"
 
 type Shortcuts struct {
@@ -74,7 +73,7 @@ type Shortcuts struct {
 }
 
 func (c *Shortcuts) filePath() string {
-	return FILE_DIR + FILE_NAME
+	return config.GetConfigDir() + FILE_NAME
 }
 
 func (c *Shortcuts) Load() {
@@ -107,9 +106,9 @@ func (c *Shortcuts) loadYAML() {
 }
 
 func (c *Shortcuts) createShortcutsFileIfNotThere() {
-	_, statErr := os.Stat(FILE_DIR)
+	_, statErr := os.Stat(config.GetConfigDir())
 	if os.IsNotExist(statErr) {
-		os.Mkdir(FILE_DIR, os.ModePerm)
+		os.Mkdir(config.GetConfigDir(), os.ModePerm)
 	}
 
 	_, statErr = os.Stat(c.filePath())

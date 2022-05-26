@@ -7,6 +7,22 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func GetConfigDir() string {
+	configDir := os.Getenv("MOSH_CONFIG_DIR")
+	if configDir == "" {
+		configDir = "mosh_config/"
+	}
+	return configDir + "/"
+}
+
+func GetLogir() string {
+	configDir := os.Getenv("MOSH_LOG_DIR")
+	if configDir == "" {
+		configDir = "moshd/"
+	}
+	return configDir + "/"
+}
+
 func GetConfig() Config {
 	conf := Config{}
 	conf.Load()
@@ -14,8 +30,6 @@ func GetConfig() Config {
 }
 
 const UNINITIALIZED = "UNINITIALIZED"
-
-const CONFIG_DIR_PART = "mosh_config/"
 const CONFIG_FILE_PART = "config.yaml"
 
 type Config struct {
@@ -36,7 +50,7 @@ func (c *Config) SetToken(token string) {
 }
 
 func (c *Config) filePath() string {
-	return CONFIG_DIR_PART + CONFIG_FILE_PART
+	return GetConfigDir() + CONFIG_FILE_PART
 }
 
 func (c *Config) loadYAML() {
@@ -64,9 +78,9 @@ func (c *Config) Save() {
 }
 
 func (c *Config) createConfigFileIfNotThere() {
-	_, statErr := os.Stat(CONFIG_DIR_PART)
+	_, statErr := os.Stat(GetConfigDir())
 	if os.IsNotExist(statErr) {
-		os.Mkdir(CONFIG_DIR_PART, os.ModePerm)
+		os.Mkdir(GetConfigDir(), os.ModePerm)
 	}
 
 	_, statErr = os.Stat(c.filePath())

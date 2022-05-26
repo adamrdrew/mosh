@@ -24,9 +24,9 @@ var musicPlayer player.Player
 func main() {
 	fmt.Println("Starting moshd...")
 	cntxt := &daemon.Context{
-		PidFileName: "moshd/moshd.pid",
+		PidFileName: "/tmp/moshd.pid",
 		PidFilePerm: 0644,
-		LogFileName: "moshd/moshd.log",
+		LogFileName: config.GetLogir() + "moshd.log",
 		LogFilePerm: 0640,
 		WorkDir:     "./",
 		Umask:       027,

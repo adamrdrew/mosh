@@ -13,6 +13,15 @@ run-moshd:
 deps:
 	go get
 
-install: 
-	go install mosh.go
-	go install moshd.go
+install:
+	cp bin/* /usr/local/bin/
+	export MOSH_CONFIG_DIR=/etc/mosh
+	export MOSH_LOG_DIR=/var/log/mosh
+	mkdir -p /etc/mosh
+	chmod 777 /etc/mosh
+	mkdir -p /var/log/mosh
+	chmod 777 /etc/mosh
+	rm /etc/profile.d/mosh.sh
+	touch /etc/profile.d/mosh.sh
+	echo "export MOSH_CONFIG_DIR=/etc/mosh" > /etc/profile.d/mosh.sh
+	echo "export MOSH_LOG_DIR=/var/log/mosh" > /etc/profile.d/mosh.sh
