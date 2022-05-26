@@ -10,7 +10,7 @@ import (
 func GetConfigDir() string {
 	configDir := os.Getenv("MOSH_CONFIG_DIR")
 	if configDir == "" {
-		configDir = "mosh_config/"
+		configDir = "mosh_tmp"
 	}
 	return configDir + "/"
 }
@@ -18,7 +18,7 @@ func GetConfigDir() string {
 func GetLogir() string {
 	configDir := os.Getenv("MOSH_LOG_DIR")
 	if configDir == "" {
-		configDir = "moshd/"
+		configDir = "mosh_tmp"
 	}
 	return configDir + "/"
 }

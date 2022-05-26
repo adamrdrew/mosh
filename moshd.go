@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/adamrdrew/mosh/config"
@@ -23,6 +24,7 @@ var musicPlayer player.Player
 //Entrypoint for the daemon
 func main() {
 	fmt.Println("Starting moshd...")
+	fmt.Println(os.Getenv("MOSH_CONFIG_DIR"))
 	cntxt := &daemon.Context{
 		PidFileName: "/tmp/moshd.pid",
 		PidFilePerm: 0644,

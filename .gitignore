@@ -15,6 +15,4 @@
 # vendor/
 
 bin
-mosh_config
-moshd/moshd.log
-moshd/moshd.pid
+mosh_tmp

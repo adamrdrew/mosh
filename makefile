@@ -1,3 +1,17 @@
+.ONESHELL :
+
+run-dev-daemon:
+	mkdir -p mosh_tmp
+	export MOSH_CONFIG_DIR=./mosh_tmp
+	export MOSH_LOG_DIR=./mosh_tmp
+	go run moshd.go 
+
+run-dev:
+	mkdir -p mosh_tmp
+	export MOSH_CONFIG_DIR=./mosh_tmp
+	export MOSH_LOG_DIR=./mosh_tmp
+	go run mosh.go $(args)
+
 build: clean
 	mkdir bin
 	go build -o bin/mosh mosh.go
@@ -6,9 +20,6 @@ build: clean
 clean:
 	go clean
 	rm -rf bin
-
-run-moshd:
-	go run moshd.go
 
 deps:
 	go get
