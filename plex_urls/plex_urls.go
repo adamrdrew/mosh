@@ -1,6 +1,8 @@
 package plex_urls
 
 import (
+	"net/url"
+
 	"github.com/adamrdrew/mosh/config"
 )
 
@@ -31,7 +33,7 @@ func (u *PlexURLs) GetLibraries() string {
 }
 
 func (u *PlexURLs) GetChildren(query string) string {
-	return u.withToken(u.Server() + RT_METADATA + query + RT_CHILDREN)
+	return u.withToken(u.Server() + RT_METADATA + u.encodeQuery(query) + RT_CHILDREN)
 }
 
 func (u *PlexURLs) SearchArstists(query string) string {
@@ -43,7 +45,7 @@ func (u *PlexURLs) SearchAlbums(query string) string {
 }
 
 func (u *PlexURLs) libraryQuery(endpoint string, query string) string {
-	return u.Server() + RT_LIBRARIES + "/" + u.Config.Library + endpoint + query + "&" + XPLEXTOKEN + u.Config.Token
+	return u.Server() + RT_LIBRARIES + "/" + u.Config.Library + endpoint + u.encodeQuery(query) + "&" + XPLEXTOKEN + u.Config.Token
 }
 
 func (u *PlexURLs) MakeURL(route string) string {
@@ -52,4 +54,8 @@ func (u *PlexURLs) MakeURL(route string) string {
 
 func (u *PlexURLs) withToken(url string) string {
 	return url + "?" + XPLEXTOKEN + u.Config.Token
+}
+
+func (u *PlexURLs) encodeQuery(query string) string {
+	return url.QueryEscape(query)
 }

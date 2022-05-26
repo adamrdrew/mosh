@@ -6,7 +6,6 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"net/http"
-	"strings"
 
 	"github.com/adamrdrew/mosh/config"
 	"github.com/adamrdrew/mosh/plex_urls"
@@ -33,10 +32,9 @@ func (s *Server) panic(err error) {
 	}
 }
 
-func (s *Server) doGet(url string) []byte {
-	url = strings.ReplaceAll(url, " ", "%20")
+func (s *Server) doGet(urlString string) []byte {
 	var client = http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", urlString, nil)
 	s.panic(err)
 
 	response, err := client.Do(req)
