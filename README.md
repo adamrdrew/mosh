@@ -258,7 +258,29 @@ If you make a mistake `shortcuts delete` has you covered:
 +----------+-------+
 ```
 
-## Errors and Help
-
 ## Development
-Running mosh during development is a little weird for now. Hoping for a better solution over time. When running mosh in development you don't want your dev version stomping over your production version config, pid file, port, etc. Mosh uses environment variables to handle all that stuff, but changing env vars from prod to dev globally would stink.
+Running mosh in dev is a little weird, but not that bad once you get used to it. I'm open to suggestions on how to do this better :)
+
+To start a dev instance of moshd:
+```
+$ make run-dev-moshd
+```
+
+Top stop your dev instance of moshd:
+```
+$ make stop-dev-moshd
+```
+
+Once you've got a dev instance of moshd running you can use the `mosh-dev.sh` script to run mosh commands via a dev instance:
+
+```
+$ ./mosh-dev.sh get playing
++---------------------------+-----------------+------------+
+| TRACK                     | ARTIST          | ALBUM      |
++---------------------------+-----------------+------------+
+| All the Love in the World | Nine Inch Nails | With Teeth |
++---------------------------+-----------------+------------+
+2:48 / 5:25 [#########-----------] 47 %
+```
+
+The dev instance uses a different config than prod so you can run dev and prod side by side without worrying about your config getting messed up. All of the dev instance's config files, log files, etc will show up in `mosh_tmp` which will be created on the fly. 
