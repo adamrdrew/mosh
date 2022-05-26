@@ -9,17 +9,27 @@ import (
 
 	"github.com/adamrdrew/mosh/ipc"
 	"github.com/adamrdrew/mosh/responses"
+	"github.com/adamrdrew/mosh/shortcuts"
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
 const TABS = "\t\t\t"
 
+func shortcutOrBlank(id string) string {
+	shortcut := shortcuts.ReverseResolve(id)
+	if shortcut == id {
+		shortcut = ""
+	}
+	return shortcut
+}
+
 func Artists(source []responses.ResponseArtistDirectory) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"ID", "Title"})
+	t.AppendHeader(table.Row{"ID", "Title", "Shortcut"})
 	for _, artist := range source {
-		t.AppendRow(table.Row{artist.RatingKey, artist.Title})
+		shortcut := shortcutOrBlank(artist.RatingKey)
+		t.AppendRow(table.Row{artist.RatingKey, artist.Title, shortcut})
 	}
 	t.Render()
 }
@@ -27,9 +37,10 @@ func Artists(source []responses.ResponseArtistDirectory) {
 func Albums(source []responses.ResponseAlbumDirectory) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"ID", "Title", "Artist"})
+	t.AppendHeader(table.Row{"ID", "Title", "Artist", "Shortcut"})
 	for _, album := range source {
-		t.AppendRow(table.Row{album.RatingKey, album.Title, album.ParentTitle})
+		shortcut := shortcutOrBlank(album.RatingKey)
+		t.AppendRow(table.Row{album.RatingKey, album.Title, album.ParentTitle, shortcut})
 	}
 	t.Render()
 }

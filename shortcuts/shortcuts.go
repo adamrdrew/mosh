@@ -7,7 +7,20 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-//Gets a shortcut for a given token
+//Get the shortcut for a given ID
+func ReverseResolve(id string) string {
+	shortcuts := loadShortcutFile()
+
+	for key, value := range shortcuts.Map {
+		if value == id {
+			return key
+		}
+	}
+
+	return id
+}
+
+//Gets an ID for a given shortcut
 //If the shortcut isn't found just return the token
 func Resolve(token string) string {
 	retVal := token
