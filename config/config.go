@@ -15,6 +15,14 @@ func GetPort() string {
 	return port
 }
 
+func GetCacheDir() string {
+	dir := os.Getenv("MOSH_CACHE_DIR")
+	if dir == "" {
+		dir = "/tmp/mosh"
+	}
+	return dir + "/"
+}
+
 func GetPidDir() string {
 	dir := os.Getenv("MOSH_PID_DIR")
 	if dir == "" {

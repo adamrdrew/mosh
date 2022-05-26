@@ -258,6 +258,18 @@ If you make a mistake `shortcuts delete` has you covered:
 +----------+-------+
 ```
 
+## Config & Logs
+Mosh has a bunch of files, directories, and ports it cares about. There are sane defaults for everything, but you can also configure them all by hand with environment variables. If you decide to change any of these I assume you know enough about what you are doing to deal with any side effects.
+
+| Description | Default | Environment Variable |
+| --------------- | --------------- | --------------- |
+| Config file dir | `/etc/mosh` | `MOSH_CONFIG_DIR` |
+| Log dir | `/var/log/mosh` | `MOSH_LOG_DIR` |
+| PID dir | `/tmp` | `MOSH_PID_DIR` |
+| Daemon Port | `9666` | `MOSH_PORT` |
+| Cache dir | `/tmp/mosh` | `MOSH_CACHE_DIR` |
+
+
 ## Development
 Running mosh in dev is a little weird, but not that bad once you get used to it. I'm open to suggestions on how to do this better :)
 
@@ -282,5 +294,6 @@ $ ./mosh-dev.sh get playing
 +---------------------------+-----------------+------------+
 2:48 / 5:25 [#########-----------] 47 %
 ```
+`mosh-dev.sh` just passes any arguments you give it to the dev version of `mosh` so the syntax is exactly the same.
 
 The dev instance uses a different config than prod so you can run dev and prod side by side without worrying about your config getting messed up. All of the dev instance's config files, log files, etc will show up in `mosh_tmp` which will be created on the fly. 

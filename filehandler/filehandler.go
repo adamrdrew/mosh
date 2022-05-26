@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/adamrdrew/mosh/config"
 	"github.com/adamrdrew/mosh/responses"
 	"github.com/adamrdrew/mosh/server"
 	"github.com/cavaliergopher/grab/v3"
@@ -13,7 +14,7 @@ func GetFileHandler(server server.Server, track responses.ResponseTrack) FileHan
 	fh := FileHandler{
 		server:   server,
 		track:    track,
-		cacheDir: "/tmp/mosh/",
+		cacheDir: config.GetCacheDir(),
 	}
 	fh.createCacheDir()
 	return fh
