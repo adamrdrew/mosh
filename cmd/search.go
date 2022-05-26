@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/adamrdrew/mosh/config"
@@ -39,7 +38,6 @@ var albumCommand = &cobra.Command{
 	Short: "Search the library",
 	Long:  `Search for an album by name`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("album command")
 		server := getServer()
 		query := strings.Join(args, " ")
 		albums := server.SearchAlbums(query)

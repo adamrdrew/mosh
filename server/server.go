@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/adamrdrew/mosh/config"
 	"github.com/adamrdrew/mosh/plex_urls"
@@ -33,6 +34,7 @@ func (s *Server) panic(err error) {
 }
 
 func (s *Server) doGet(url string) []byte {
+	url = strings.ReplaceAll(url, " ", "%20")
 	var client = http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	s.panic(err)
@@ -44,7 +46,6 @@ func (s *Server) doGet(url string) []byte {
 	s.panic(err)
 
 	return body
-
 }
 
 func (s *Server) getServerData() {
@@ -80,6 +81,7 @@ func (s *Server) SearchArtists(artistName string) []responses.ResponseArtistDire
 	body := s.doGet(url)
 
 	var serverResponse = new(responses.ResponseArtistMediaContainer)
+
 	xmlError := xml.Unmarshal(body, &serverResponse)
 	s.panic(xmlError)
 
