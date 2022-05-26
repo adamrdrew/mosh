@@ -43,22 +43,19 @@ We are ready to ROCK!!!!
 Before you can play something you need to find it. You can use the `mosh search` command along with the `artist` and `album` subcommands to search for albums or artists:
 
 ```
- $ mosh search artist dillinger
-Welcome to MOSH! 🎧💿🐧
-+------+---------------------------+
-| ID   | TITLE                     |
-+------+---------------------------+
-| 2209 | The Dillinger Escape Plan |
-+------+---------------------------+
+ $ mosh search artist norma
++------+------------+----------+
+| ID   | TITLE      | SHORTCUT |
++------+------------+----------+
+| 2956 | Norma Jean |          |
++------+------------+----------+
 
  $ mosh search album hail
-Welcome to MOSH! 🎧💿🐧
-album command
-+--------+----------+------------+
-| ID     | TITLE    | ARTIST     |
-+--------+----------+------------+
-| 100358 | All Hail | Norma Jean |
-+--------+----------+------------+
++--------+----------+------------+----------+
+| ID     | TITLE    | ARTIST     | SHORTCUT |
++--------+----------+------------+----------+
+| 100358 | All Hail | Norma Jean |          |
++--------+----------+------------+----------+
 
 ```
 
@@ -70,39 +67,43 @@ If you want to see the albums by an artist or the songs on an album you can use 
 
 ```
  $ mosh search artist pantera
-+--------+---------+
-| ID     | TITLE   |
-+--------+---------+
-| 100034 | Pantera |
-+--------+---------+
++--------+---------+----------+
+| ID     | TITLE   | SHORTCUT |
++--------+---------+----------+
+| 100034 | Pantera |          |
++--------+---------+----------+
+
 
  $ mosh ls artist 100034
-+--------+------------------------------+---------+
-| ID     | TITLE                        | ARTIST  |
-+--------+------------------------------+---------+
-| 100085 | Cowboys From Hell            | Pantera |
-| 100048 | Far Beyond Driven            | Pantera |
-| 100035 | The Great Southern Trendkill | Pantera |
-| 100074 | Reinventing the Steel        | Pantera |
-| 100062 | Vulgar Display of Power      | Pantera |
-+--------+------------------------------+---------+
++--------+------------------------------+---------+----------+
+| ID     | TITLE                        | ARTIST  | SHORTCUT |
++--------+------------------------------+---------+----------+
+| 100085 | Cowboys From Hell            | Pantera |          |
+| 100048 | Far Beyond Driven            | Pantera |          |
+| 100035 | The Great Southern Trendkill | Pantera |          |
+| 100074 | Reinventing the Steel        | Pantera |          |
+| 100062 | Vulgar Display of Power      | Pantera |          |
++--------+------------------------------+---------+----------+
 
- $ mosh ls album 100062
-+--------+-------+------------------------------+-------------------------+---------+
-| ID     | TRACK | TITLE                        | ALBUM                   | ARTIST  |
-+--------+-------+------------------------------+-------------------------+---------+
-| 100063 | 1     | Mouth for War                | Vulgar Display of Power | Pantera |
-| 100064 | 2     | A New Level                  | Vulgar Display of Power | Pantera |
-| 100065 | 3     | Walk                         | Vulgar Display of Power | Pantera |
-| 100066 | 4     | Fucking Hostile              | Vulgar Display of Power | Pantera |
-| 100067 | 5     | This Love                    | Vulgar Display of Power | Pantera |
-| 100068 | 6     | Rise                         | Vulgar Display of Power | Pantera |
-| 100069 | 7     | No Good (Attack the Radical) | Vulgar Display of Power | Pantera |
-| 100070 | 8     | Live in a Hole               | Vulgar Display of Power | Pantera |
-| 100071 | 9     | Regular People (Conceit)     | Vulgar Display of Power | Pantera |
-| 100072 | 10    | By Demons Be Driven          | Vulgar Display of Power | Pantera |
-| 100073 | 11    | Hollow                       | Vulgar Display of Power | Pantera |
-+--------+-------+------------------------------+-------------------------+---------+
+
+ $ mosh ls album 100085
++--------+-------+------------------------+-------------------+---------+
+| ID     | TRACK | TITLE                  | ALBUM             | ARTIST  |
++--------+-------+------------------------+-------------------+---------+
+| 100086 | 1     | Cowboys From Hell      | Cowboys From Hell | Pantera |
+| 100087 | 2     | Primal Concrete Sledge | Cowboys From Hell | Pantera |
+| 100088 | 3     | Psycho Holiday         | Cowboys From Hell | Pantera |
+| 100089 | 4     | Heresy                 | Cowboys From Hell | Pantera |
+| 100090 | 5     | Cemetery Gates         | Cowboys From Hell | Pantera |
+| 100091 | 6     | Domination             | Cowboys From Hell | Pantera |
+| 100092 | 7     | Shattered              | Cowboys From Hell | Pantera |
+| 100093 | 8     | Clash With Reality     | Cowboys From Hell | Pantera |
+| 100094 | 9     | Medicine Man           | Cowboys From Hell | Pantera |
+| 100095 | 10    | Message in Blood       | Cowboys From Hell | Pantera |
+| 100096 | 11    | The Sleep              | Cowboys From Hell | Pantera |
+| 100097 | 12    | The Art of Shredding   | Cowboys From Hell | Pantera |
++--------+-------+------------------------+-------------------+---------+
+
 ```
 
 ## The Mosh Daemon - moshd
@@ -188,22 +189,24 @@ ID numbers can be a drag when you are dealing with stuff you listen to a lot. Sh
 
 ```
  $ mosh search artist dillinger
-+------+---------------------------+
-| ID   | TITLE                     |
-+------+---------------------------+
-| 2209 | The Dillinger Escape Plan |
-+------+---------------------------+
++------+---------------------------+----------+
+| ID   | TITLE                     | SHORTCUT |
++------+---------------------------+----------+
+| 2209 | The Dillinger Escape Plan |          |
++------+---------------------------+----------+
+
  
  $ mosh shortcuts add tdep 2209
  
  $ mosh ls artist tdep
-+-------+------------------+---------------------------+
-| ID    | TITLE            | ARTIST                    |
-+-------+------------------+---------------------------+
-| 74932 | Ire Works        | The Dillinger Escape Plan |
-| 74920 | Miss Machine     | The Dillinger Escape Plan |
-| 74909 | Option Paralysis | The Dillinger Escape Plan |
-+-------+------------------+---------------------------+
++-------+------------------+---------------------------+----------+
+| ID    | TITLE            | ARTIST                    | SHORTCUT |
++-------+------------------+---------------------------+----------+
+| 74932 | Ire Works        | The Dillinger Escape Plan |          |
+| 74920 | Miss Machine     | The Dillinger Escape Plan |          |
+| 74909 | Option Paralysis | The Dillinger Escape Plan |          |
++-------+------------------+---------------------------+----------+
+
  
  $ mosh shortcuts add ireworks 74932
  
