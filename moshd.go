@@ -86,11 +86,11 @@ func (p *Player) QueueAlbum(albumID string) ipc.Response {
 
 func (p *Player) PlayQueue() {
 	for index, songID := range p.Queue {
+		p.CurrentIndex = index
 		fileHandler := filehandler.GetFileHandler(p.Server, songID)
 		path := fileHandler.GetTrackFile()
 		p.PlaySongFile(path)
 		log.Print("Playing: ", path)
-		p.CurrentIndex = index
 	}
 }
 
@@ -213,38 +213,6 @@ func handleMessage(message ipc.Message) ipc.Response {
 		response = player.GetNowPlaying()
 	case "stop":
 		player.StopQueue()
-		/*
-			case "set-queue":
-				response.Message = "Queue set"
-				log.Print(response.Message)
-				player.SetQueue(message.Args)
-			case "play-queue":
-				response.Message = "Playing Queue"
-				if player.MaxIndex > 0 {
-					go player.PlayQueue()
-				} else {
-					response.Code = "Error"
-					response.Message = "Play queue empty"
-				}
-			case "stop":
-				response.Message = "Stopped song"
-				log.Print("Stop song")
-			case "pause":
-				response.Message = "Paused Song"
-				log.Print("Pause song")
-			case "previous":
-				response.Message = "Previous song"
-				log.Print("Previous song")
-			case "next":
-				response.Message = "Next song"
-				log.Print("Next song")
-			case "status":
-				response.Message = "Status"
-				log.Print("Get status")
-			case "default":
-				response.Code = "UNKNOWN"
-				response.Message = "Unknown command recieved."
-		*/
 	}
 
 	return response
