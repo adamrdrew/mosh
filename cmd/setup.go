@@ -46,7 +46,7 @@ func setup() {
 	//TODO: If you have multiple servers you are SOL we're just using the first in the list
 	server := server.GetServer(&conf)
 
-	library_manager.GetLibraryManager(server, &conf)
+	library_manager.SetLibraryInConf(server, &conf)
 
 	moshd.StartWaitAndCheck()
 

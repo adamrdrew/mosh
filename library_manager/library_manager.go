@@ -13,7 +13,7 @@ import (
 
 const MUSIC_LIB_TYPE = "artist"
 
-func GetLibraryManager(serv server.Server, conf *config.Config) LibrarySelector {
+func SetLibraryInConf(serv server.Server, conf *config.Config) LibrarySelector {
 	ls := LibrarySelector{
 		Config: conf,
 		Server: serv,

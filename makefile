@@ -28,5 +28,5 @@ test:
 	export MOSH_PORT=9888
 	export MOSH_CACHE_DIR=../mosh_test
 	go clean -testcache
-	go test `go list ./... | grep -v cmd | grep "/mosh/"`
+	go test `go list ./... | grep -v cmd | grep -v responses | grep "/mosh/"`
 	rm -rf ./mosh_test
