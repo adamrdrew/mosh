@@ -1,3 +1,4 @@
+MAKEFLAGS += --silent
 .ONESHELL :
 build: clean
 	mkdir bin
@@ -21,11 +22,11 @@ install:
 
 test:
 	mkdir -p mosh_test
-	export MOSH_CONFIG_DIR=./mosh_test
-	export MOSH_LOG_DIR=./mosh_test
-	export MOSH_PID_DIR=./mosh_test
+	export MOSH_CONFIG_DIR=../mosh_test
+	export MOSH_LOG_DIR=../mosh_test
+	export MOSH_PID_DIR=../mosh_test
 	export MOSH_PORT=9888
-	export MOSH_CACHE_DIR=./mosh_test
+	export MOSH_CACHE_DIR=../mosh_test
 	go clean -testcache
-	go test ./...
+	go test `go list ./... | grep -v cmd | grep "/mosh/"`
 	rm -rf ./mosh_test
