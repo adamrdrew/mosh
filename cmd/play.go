@@ -27,6 +27,9 @@ var playAlbumCommand = &cobra.Command{
 	Long:    `Play an album by ID`,
 	Aliases: []string{"a", "al"},
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "queue-album",
 			Data:    shortcuts.Resolve(args[0]),
@@ -47,6 +50,9 @@ var playSongCommand = &cobra.Command{
 	Long:    `Play a song by ID`,
 	Aliases: []string{"s"},
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
 		//server := getServer()
 		fmt.Println("Play song")
 	},

@@ -61,8 +61,6 @@ func CheckDaemonStatus() *os.Process {
 		return nil
 	}
 
-	fmt.Println("Daemon status OK - PID:", pid)
-
 	return proc
 }
 

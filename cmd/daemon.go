@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/adamrdrew/mosh/moshd"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +46,9 @@ var daemonStatusCommand = &cobra.Command{
 	Short: "Get status of mosh daemon",
 	Long:  `Get the status of the mosh daemon`,
 	Run: func(cmd *cobra.Command, args []string) {
-		moshd.CheckDaemonStatus()
+		proc := moshd.CheckDaemonStatus()
+		if proc != nil {
+			fmt.Println("Daemon status OK - PID:", proc.Pid)
+		}
 	},
 }

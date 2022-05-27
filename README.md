@@ -42,6 +42,10 @@ Type the number to the left of the name of the library you want.
     1) Roddy Music
 0
 Library set.
+
+Starting mosh daemon...
+Daemon status OK - PID: 500198
+
 We are ready to ROCK!!!!
 ```
 
@@ -111,19 +115,6 @@ If you want to see the albums by an artist or the songs on an album you can use 
 +--------+-------+------------------------+-------------------+---------+
 
 ```
-
-## The Mosh Daemon - moshd
-So far we've been looking at the mosh CLI and running queries against Plex. In order to play music we'll need to run `moshd`: The Mosh Daemon. Start `moshd` and it'll fork into the background. There's nothing else to set up or think about.
-
-**Important: You need to have run `mosh setup` before you can start `moshd`**
-
-```
-$ ./moshd
-Starting moshd...
-
-$
-```
-Now that `moshd` is running we can look at playing some music!
 
 ## Play an Album
 Use the `mosh play album` command to play an album:
@@ -258,7 +249,7 @@ If you make a mistake `shortcuts delete` has you covered:
 +----------+-------+
 ```
 
-## Config & Logs
+## Config
 Mosh has a bunch of files, directories, and ports it cares about. There are sane defaults for everything, but you can also configure them all by hand with environment variables. If you decide to change any of these I assume you know enough about what you are doing to deal with any side effects.
 
 | Description | Default | Environment Variable |
@@ -268,6 +259,8 @@ Mosh has a bunch of files, directories, and ports it cares about. There are sane
 | PID dir | `/tmp` | `MOSH_PID_DIR` |
 | Daemon Port | `9666` | `MOSH_PORT` |
 | Cache dir | `/tmp/mosh` | `MOSH_CACHE_DIR` |
+
+## Debugging and Errors
 
 
 ## Development

@@ -27,6 +27,9 @@ var getPlayingCommand = &cobra.Command{
 	Aliases: []string{"p", "pl"},
 	Long:    `Get detailed info on what is currently playing`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "now-playing",
 		})
@@ -46,6 +49,9 @@ var getQueueCommand = &cobra.Command{
 	Aliases: []string{"q", "qu"},
 	Long:    `Get detailed info on the play queue`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "get-queue",
 		})
