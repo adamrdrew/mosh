@@ -21,6 +21,8 @@ $ sudo apt-get install libasound2-dev
 2. Run `make build`
 2. Run `sudo make install`
 
+*Note: If you already have mosh installed and are upgrading make sure you run `mosh daemon stop` before running `make install`.*
+
 ## Setup
 Mosh needs to authenticate to your Plex server and access a music library on it. The `mosh setup` command handles all of this for you. The steps are run `mosh setup`, click the link it provides you to authenticate to Plex, and then select the library you want to use from the text menu.
 
