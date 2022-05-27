@@ -122,17 +122,12 @@ func (p *Player) NowPlayingSongString() string {
 }
 
 func (p *Player) PlayQueue() {
-	log.Println("PlayQueue p.CurrentIndex", p.CurrentIndex)
 	for i := p.CurrentIndex; i < p.MaxIndex; i++ {
-		log.Println("PlayQueue i at top of loop", i)
 		if p.StopPlayLoop {
 			p.StopPlayLoop = false
 			break
 		}
-		log.Println("PlayQueue p.CurrentIndex right before i", p.CurrentIndex)
-		log.Println("PlayQueue i", i)
 		p.CurrentIndex = i
-		log.Println("PlayQueue p.CurrentIndex", p.CurrentIndex)
 		song := p.Queue[i]
 		fileHandler := filehandler.GetFileHandler(p.Server, song)
 		path := fileHandler.GetTrackFile()
