@@ -7,6 +7,7 @@ import (
 	"github.com/adamrdrew/mosh/auth"
 	"github.com/adamrdrew/mosh/config"
 	"github.com/adamrdrew/mosh/library_manager"
+	"github.com/adamrdrew/mosh/moshd"
 	"github.com/adamrdrew/mosh/server"
 	"github.com/spf13/cobra"
 )
@@ -46,6 +47,8 @@ func setup() {
 	server := server.GetServer(&conf)
 
 	library_manager.GetLibraryManager(server, &conf)
+
+	moshd.StartWaitAndCheck()
 
 	fmt.Println("We are ready to ROCK!!!!")
 }

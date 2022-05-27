@@ -1,12 +1,15 @@
-package main
+package moshd
 
 // This page was very helpful here https://github.com/faiface/beep/wiki/Hello,-Beep!
 
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/adamrdrew/mosh/config"
@@ -20,11 +23,74 @@ import (
 
 var musicPlayer player.Player
 
+func StartWaitAndCheck() {
+	StartDaemon()
+	time.Sleep(1 * time.Second)
+	CheckDaemonStatus()
+}
+
+func readPidFile() (string, error) {
+	fileContent, err := ioutil.ReadFile(pidFile())
+	if err != nil {
+		return "", err
+	}
+
+	// Convert []byte to string
+	text := string(fileContent)
+	return text, nil
+}
+
+func pidFile() string {
+	return config.GetPidDir() + "moshd.pid"
+}
+
+func CheckDaemonStatus() *os.Process {
+	pid, err := readPidFile()
+	if err != nil {
+		fmt.Println("PID file not found. Daemon not running?")
+		return nil
+	}
+	pidInt, convErr := strconv.ParseInt(pid, 10, 64)
+	if convErr != nil {
+		fmt.Println("PID file malformed. Something is wrong.")
+		return nil
+	}
+	proc, err := os.FindProcess(int(pidInt))
+	if err != nil || proc == nil {
+		fmt.Println("Process not found. Daemon not running?")
+		return nil
+	}
+
+	fmt.Println("Daemon status OK - PID:", pid)
+
+	return proc
+}
+
+func KillDaemon() {
+	proc := CheckDaemonStatus()
+
+	if proc == nil {
+		fmt.Println("Can't stat daemon. Something wrong.")
+		return
+	}
+
+	// Kill the process
+	kErr := proc.Kill()
+	if kErr != nil {
+		fmt.Println("Kill process failed. Something is wrong. Daemon not running?")
+		return
+	}
+
+	os.Remove(pidFile())
+
+	fmt.Println("OK - Daemon stopped.")
+}
+
 //Entrypoint for the daemon
-func main() {
-	fmt.Println("Starting moshd...")
+func StartDaemon() {
+	fmt.Println("Starting mosh daemon...")
 	cntxt := &daemon.Context{
-		PidFileName: config.GetPidDir() + "moshd.pid",
+		PidFileName: pidFile(),
 		PidFilePerm: 0644,
 		LogFileName: config.GetLogir() + "moshd.log",
 		LogFilePerm: 0640,
@@ -35,6 +101,7 @@ func main() {
 	d, err := cntxt.Reborn()
 	if err != nil {
 		log.Fatal("Unable to run: ", err)
+		return
 	}
 	if d != nil {
 		return
@@ -43,6 +110,7 @@ func main() {
 
 	log.Print("- - - - - - - - - - - - - - -")
 	log.Print("moshd started")
+	fmt.Println("Mosh daemon started.")
 
 	musicPlayer = player.Player{}
 	musicPlayer.Init()
