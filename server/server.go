@@ -32,7 +32,7 @@ func (s *Server) panic(err error) {
 	}
 }
 
-func (s *Server) doGet(urlString string) []byte {
+func (s *Server) doGet(urlString string) ([]byte, int) {
 	var client = http.Client{}
 	req, err := http.NewRequest("GET", urlString, nil)
 	s.panic(err)
@@ -43,7 +43,7 @@ func (s *Server) doGet(urlString string) []byte {
 	body, err := ioutil.ReadAll(response.Body)
 	s.panic(err)
 
-	return body
+	return body, response.StatusCode
 }
 
 func (s *Server) getServerData() {
@@ -51,7 +51,7 @@ func (s *Server) getServerData() {
 	//Plex server queries. This is a plex.tv query. It is a one-off.
 	url := "https://plex.tv/pms/servers.xml?X-Plex-Token=" + s.Config.Token
 
-	body := s.doGet(url)
+	body, _ := s.doGet(url)
 
 	var serverResponse = new(responses.ServerMediaContainer)
 	xmlError := xml.Unmarshal(body, &serverResponse)
@@ -64,7 +64,7 @@ func (s *Server) getServerData() {
 
 func (s *Server) GetLibraries() responses.LibraryMediaContainer {
 	url := s.PlexURLs.GetLibraries()
-	body := s.doGet(url)
+	body, _ := s.doGet(url)
 
 	var serverResponse = new(responses.LibraryMediaContainer)
 	xmlError := xml.Unmarshal(body, &serverResponse)
@@ -76,7 +76,10 @@ func (s *Server) GetLibraries() responses.LibraryMediaContainer {
 func (s *Server) SearchArtists(artistName string) []responses.ResponseArtistDirectory {
 	url := s.PlexURLs.SearchArstists(artistName)
 
-	body := s.doGet(url)
+	body, respCode := s.doGet(url)
+	if respCode != 200 {
+		return []responses.ResponseArtistDirectory{}
+	}
 
 	var serverResponse = new(responses.ResponseArtistMediaContainer)
 
@@ -88,7 +91,10 @@ func (s *Server) SearchArtists(artistName string) []responses.ResponseArtistDire
 
 func (s *Server) SearchAlbums(albumName string) []responses.ResponseAlbumDirectory {
 	url := s.PlexURLs.SearchAlbums(albumName)
-	body := s.doGet(url)
+	body, respCode := s.doGet(url)
+	if respCode != 200 {
+		return []responses.ResponseAlbumDirectory{}
+	}
 
 	var serverResponse = new(responses.ResponseAlbumMediaContainer)
 	xmlError := xml.Unmarshal(body, &serverResponse)
@@ -99,7 +105,10 @@ func (s *Server) SearchAlbums(albumName string) []responses.ResponseAlbumDirecto
 
 func (s *Server) GetAlbumsForArtist(artistID string) []responses.ResponseAlbumDirectory {
 	url := s.PlexURLs.GetChildren(artistID)
-	body := s.doGet(url)
+	body, respCode := s.doGet(url)
+	if respCode != 200 {
+		return []responses.ResponseAlbumDirectory{}
+	}
 
 	var serverResponse = new(responses.ResponseAlbumMediaContainer)
 	xmlError := xml.Unmarshal(body, &serverResponse)
@@ -110,7 +119,11 @@ func (s *Server) GetAlbumsForArtist(artistID string) []responses.ResponseAlbumDi
 
 func (s *Server) GetSongsForAlbum(albumID string) []responses.ResponseTrack {
 	url := s.PlexURLs.GetChildren(albumID)
-	body := s.doGet(url)
+
+	body, respCode := s.doGet(url)
+	if respCode != 200 {
+		return []responses.ResponseTrack{}
+	}
 
 	var serverResponse = new(responses.ResponseTracksMediaContainer)
 	xmlError := xml.Unmarshal(body, &serverResponse)

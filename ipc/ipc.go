@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/adamrdrew/mosh/config"
@@ -44,6 +45,7 @@ func (r *Response) Add(ri ResponseItem) {
 
 func maybePanic(err error) {
 	if err != nil {
+		log.Fatal(err)
 		panic(err)
 	}
 }
