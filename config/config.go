@@ -7,6 +7,11 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const UNINITIALIZED = "UNINITIALIZED"
+const CONFIG_FILE_PART = "config.yaml"
+
+var Version string
+
 func GetPort() string {
 	port := os.Getenv("MOSH_PORT")
 	if port == "" {
@@ -52,9 +57,6 @@ func GetConfig() Config {
 	conf.Load()
 	return conf
 }
-
-const UNINITIALIZED = "UNINITIALIZED"
-const CONFIG_FILE_PART = "config.yaml"
 
 type Config struct {
 	Token   string

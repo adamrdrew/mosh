@@ -1,8 +1,13 @@
-MAKEFLAGS += --silent
 .ONESHELL :
+
+MAKEFLAGS += --silent
+VERSION=`git describe --tags`
+LDFLAGS=-X main.Version=
+
 build: clean
+
 	mkdir bin
-	go build -o bin/mosh mosh.go
+	go build -ldflags "${LDFLAGS}${VERSION}" -o bin/mosh mosh.go
 
 clean:
 	go clean
