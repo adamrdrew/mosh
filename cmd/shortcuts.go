@@ -17,15 +17,17 @@ func init() {
 }
 
 var shortcutCommand = &cobra.Command{
-	Use:   "shortcuts [add|delete|list]",
-	Short: "Manage shortcuts",
-	Long:  `Manage shortcuts for frequently accessed IDs`,
+	Use:     "shortcuts",
+	Aliases: []string{"sh"},
+	Short:   "Manage shortcuts",
+	Long:    `Manage shortcuts for frequently accessed IDs`,
 }
 
 var shortcutAddCommand = &cobra.Command{
-	Use:   "add [shortcut] [id]",
-	Short: "Add a shortcut for an ID",
-	Long:  `Example: shortcut add nin 3220`,
+	Use:     "add",
+	Aliases: []string{"a"},
+	Short:   "Add a shortcut for an ID",
+	Long:    `Example: shortcut add nin 3220`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 2 {
 			fmt.Println("Provide the shortcut and the ID")
@@ -36,18 +38,20 @@ var shortcutAddCommand = &cobra.Command{
 }
 
 var shortcutDelCommand = &cobra.Command{
-	Use:   "delete [shortcut]",
-	Short: "Remove a shortcut",
-	Long:  `Example: shortcut delete nin`,
+	Use:     "delete",
+	Aliases: []string{"d", "del"},
+	Short:   "Remove a shortcut",
+	Long:    `Example: shortcut delete nin`,
 	Run: func(cmd *cobra.Command, args []string) {
 		shortcuts.Delete(args[0])
 	},
 }
 
 var shortcutListCommand = &cobra.Command{
-	Use:   "list",
-	Short: "List all shortcuts",
-	Long:  `List all shortcuts in a table`,
+	Use:     "list",
+	Aliases: []string{"ls"},
+	Short:   "List all shortcuts",
+	Long:    `List all shortcuts in a table`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cuts := shortcuts.GetAll()
 		printer.Shortcuts(cuts)

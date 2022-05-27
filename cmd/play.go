@@ -15,15 +15,17 @@ func init() {
 }
 
 var playCommand = &cobra.Command{
-	Use:   "play [album | song]",
-	Short: "Play a song or album",
-	Long:  `Play a song or album`,
+	Use:     "play",
+	Short:   "Play a song or album",
+	Long:    `Play a song or album`,
+	Aliases: []string{"p", "pl"},
 }
 
 var playAlbumCommand = &cobra.Command{
-	Use:   "album [album ID]",
-	Short: "Play an album",
-	Long:  `Play an album by ID`,
+	Use:     "album",
+	Short:   "Play an album",
+	Long:    `Play an album by ID`,
+	Aliases: []string{"a", "al"},
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "queue-album",
@@ -40,9 +42,10 @@ var playAlbumCommand = &cobra.Command{
 }
 
 var playSongCommand = &cobra.Command{
-	Use:   "song [song ID]",
-	Short: "Play song",
-	Long:  `Play a song by ID`,
+	Use:     "song",
+	Short:   "Play song",
+	Long:    `Play a song by ID`,
+	Aliases: []string{"s"},
 	Run: func(cmd *cobra.Command, args []string) {
 		//server := getServer()
 		fmt.Println("Play song")

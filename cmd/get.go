@@ -15,15 +15,17 @@ func init() {
 }
 
 var getCommand = &cobra.Command{
-	Use:   "get",
-	Short: "Get info ",
-	Long:  `Get info on things like song, queue, etc`,
+	Use:     "get",
+	Short:   "Get info ",
+	Long:    `Get info on things like song, queue, etc`,
+	Aliases: []string{"g"},
 }
 
 var getPlayingCommand = &cobra.Command{
-	Use:   "playing",
-	Short: "See what's playing",
-	Long:  `Get detailed info on what is currently playing`,
+	Use:     "playing",
+	Short:   "See what's playing",
+	Aliases: []string{"p", "pl"},
+	Long:    `Get detailed info on what is currently playing`,
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "now-playing",
@@ -39,9 +41,10 @@ var getPlayingCommand = &cobra.Command{
 }
 
 var getQueueCommand = &cobra.Command{
-	Use:   "queue",
-	Short: "See the play queue",
-	Long:  `Get detailed info on the play queue`,
+	Use:     "queue",
+	Short:   "See the play queue",
+	Aliases: []string{"q", "qu"},
+	Long:    `Get detailed info on the play queue`,
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "get-queue",

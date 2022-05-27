@@ -16,15 +16,17 @@ func init() {
 }
 
 var searchCommand = &cobra.Command{
-	Use:   "search [album | artist]",
-	Short: "Search the for an album or artist",
-	Long:  `Search the library for albums or artists`,
+	Use:     "search",
+	Aliases: []string{"s", "se"},
+	Short:   "Search the for an album or artist",
+	Long:    `Search the library for albums or artists`,
 }
 
 var artistCommand = &cobra.Command{
-	Use:   "artist [artist name]",
-	Short: "Search for an artist",
-	Long:  `Search for artist by name. Partial names are fine.`,
+	Use:     "artist",
+	Aliases: []string{"ar"},
+	Short:   "Search for an artist",
+	Long:    `Search for artist by name. Partial names are fine.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server := getServer()
 		query := strings.Join(args, " ")
@@ -34,9 +36,10 @@ var artistCommand = &cobra.Command{
 }
 
 var albumCommand = &cobra.Command{
-	Use:   "album [album name]",
-	Short: "Search the library",
-	Long:  `Search for an album by name`,
+	Use:     "album",
+	Aliases: []string{"al"},
+	Short:   "Search the library",
+	Long:    `Search for an album by name`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server := getServer()
 		query := strings.Join(args, " ")

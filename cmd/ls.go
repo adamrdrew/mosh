@@ -14,15 +14,16 @@ func init() {
 }
 
 var lsCommand = &cobra.Command{
-	Use:   "ls [album ID|artist ID]",
+	Use:   "ls",
 	Short: "List children. Shortcuts supported.",
 	Long:  `List children of an artist or album, being albums or songs respectively. Supports shortcuts.`,
 }
 
 var lsArtistCommand = &cobra.Command{
-	Use:   "artist [artist ID]",
-	Short: "List albums for an artist",
-	Long:  `List albums by artist ID. Use the search artist command to get the ID`,
+	Use:     "artist",
+	Aliases: []string{"ar"},
+	Short:   "List albums for an artist",
+	Long:    `List albums by artist ID. Use the search artist command to get the ID`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server := getServer()
 		query := shortcuts.Resolve(args[0])
@@ -32,9 +33,10 @@ var lsArtistCommand = &cobra.Command{
 }
 
 var lsAlbumCommand = &cobra.Command{
-	Use:   "album [album ID]",
-	Short: "List songs for an album",
-	Long:  `List songs by album ID. Use the search album command to get the ID`,
+	Use:     "album",
+	Aliases: []string{"al"},
+	Short:   "List songs for an album",
+	Long:    `List songs by album ID. Use the search album command to get the ID`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server := getServer()
 		query := shortcuts.Resolve(args[0])
@@ -44,9 +46,10 @@ var lsAlbumCommand = &cobra.Command{
 }
 
 var lsShortcutCommand = &cobra.Command{
-	Use:   "shortcuts",
-	Short: "List all shortcuts",
-	Long:  `List all shortcuts in a table`,
+	Use:     "shortcuts",
+	Aliases: []string{"sh", "sc"},
+	Short:   "List all shortcuts",
+	Long:    `List all shortcuts in a table`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cuts := shortcuts.GetAll()
 		printer.Shortcuts(cuts)

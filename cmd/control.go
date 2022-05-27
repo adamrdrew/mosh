@@ -16,15 +16,17 @@ func init() {
 }
 
 var controlCommand = &cobra.Command{
-	Use:   "control [stop|play|back|next]",
-	Short: "Control playback",
-	Long:  `These are the buttons on your tape deck (are you old enough to remember tape decks?)`,
+	Use:     "control",
+	Aliases: []string{"c", "co", "con", "ctrl"},
+	Short:   "Control playback",
+	Long:    `These are the buttons on your tape deck (are you old enough to remember tape decks?)`,
 }
 
 var controlStopCommand = &cobra.Command{
-	Use:   "stop",
-	Short: "Stop the play queue",
-	Long:  `Stops the play queue but leaves it loaded. Returns the play position to the first track.`,
+	Use:     "stop",
+	Short:   "Stop the play queue",
+	Aliases: []string{"s", "st"},
+	Long:    `Stops the play queue but leaves it loaded. Returns the play position to the first track.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "stop",
@@ -35,9 +37,10 @@ var controlStopCommand = &cobra.Command{
 }
 
 var controlPlayCommand = &cobra.Command{
-	Use:   "play",
-	Short: "Play the queue from the current position",
-	Long:  `Starts playing the play queue from the current position`,
+	Use:     "play",
+	Aliases: []string{"p", "pl"},
+	Short:   "Play the queue from the current position",
+	Long:    `Starts playing the play queue from the current position`,
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "play-queue",
@@ -48,9 +51,10 @@ var controlPlayCommand = &cobra.Command{
 }
 
 var controlNextCommand = &cobra.Command{
-	Use:   "next",
-	Short: "Skip to the next track in queue",
-	Long:  `Skip to the next track in queue`,
+	Use:     "next",
+	Aliases: []string{"n", "ne"},
+	Short:   "Skip to the next track in queue",
+	Long:    `Skip to the next track in queue`,
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "next",
@@ -61,9 +65,10 @@ var controlNextCommand = &cobra.Command{
 }
 
 var controlBackCommand = &cobra.Command{
-	Use:   "back",
-	Short: "Skip to the previous track in queue",
-	Long:  `Skip to the previous track in queue`,
+	Use:     "back",
+	Aliases: []string{"b", "ba"},
+	Short:   "Skip to the previous track in queue",
+	Long:    `Skip to the previous track in queue`,
 	Run: func(cmd *cobra.Command, args []string) {
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "back",
