@@ -18,7 +18,7 @@ func init() {
 
 var shortcutCommand = &cobra.Command{
 	Use:     "shortcuts",
-	Aliases: []string{"sh"},
+	Aliases: []string{"sh", "shortcut"},
 	Short:   "Manage shortcuts",
 	Long:    `Manage shortcuts for frequently accessed IDs`,
 }
