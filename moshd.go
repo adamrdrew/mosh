@@ -60,7 +60,7 @@ func startListener() {
 	log.Print("Starting listener....")
 	http.HandleFunc("/listener", httpListener)
 	//Number of the beast... with a 9 in front of it.
-	log.Fatal(http.ListenAndServe(":"+config.GetPort(), nil))
+	log.Fatal(http.ListenAndServe("127.0.0.1:"+config.GetPort(), nil))
 }
 
 //The HTTP handler function. Gets messages, decodes them, and sends them through

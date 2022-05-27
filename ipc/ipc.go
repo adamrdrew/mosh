@@ -49,7 +49,7 @@ func maybePanic(err error) {
 }
 
 func daemonTransport(message Message) []byte {
-	host := "http://0.0.0.0"
+	host := "http://127.0.0.1"
 	port := config.GetPort()
 	route := "listener"
 	url := host + ":" + port + "/" + route
