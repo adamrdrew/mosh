@@ -30,6 +30,9 @@ var getPlayingCommand = &cobra.Command{
 		if !guardDaemonIsRunning() {
 			return
 		}
+		if !guardSetupCompleted() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "now-playing",
 		})
@@ -50,6 +53,9 @@ var getQueueCommand = &cobra.Command{
 	Long:    `Get detailed info on the play queue`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if !guardDaemonIsRunning() {
+			return
+		}
+		if !guardSetupCompleted() {
 			return
 		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{

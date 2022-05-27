@@ -30,6 +30,9 @@ var playAlbumCommand = &cobra.Command{
 		if !guardDaemonIsRunning() {
 			return
 		}
+		if !guardSetupCompleted() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "queue-album",
 			Data:    shortcuts.Resolve(args[0]),
@@ -51,6 +54,9 @@ var playSongCommand = &cobra.Command{
 	Aliases: []string{"s"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if !guardDaemonIsRunning() {
+			return
+		}
+		if !guardSetupCompleted() {
 			return
 		}
 		//server := getServer()

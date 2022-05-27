@@ -28,6 +28,12 @@ var controlStopCommand = &cobra.Command{
 	Aliases: []string{"s", "st"},
 	Long:    `Stops the play queue but leaves it loaded. Returns the play position to the first track.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
+		if !guardSetupCompleted() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "stop",
 		})
@@ -42,6 +48,12 @@ var controlPlayCommand = &cobra.Command{
 	Short:   "Play the queue from the current position",
 	Long:    `Starts playing the play queue from the current position`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
+		if !guardSetupCompleted() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "play-queue",
 		})
@@ -56,6 +68,12 @@ var controlNextCommand = &cobra.Command{
 	Short:   "Skip to the next track in queue",
 	Long:    `Skip to the next track in queue`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
+		if !guardSetupCompleted() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "next",
 		})
@@ -70,6 +88,12 @@ var controlBackCommand = &cobra.Command{
 	Short:   "Skip to the previous track in queue",
 	Long:    `Skip to the previous track in queue`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardDaemonIsRunning() {
+			return
+		}
+		if !guardSetupCompleted() {
+			return
+		}
 		responseList := ipc.SendMessageToDaemon(ipc.Message{
 			Command: "back",
 		})

@@ -25,6 +25,9 @@ var lsArtistCommand = &cobra.Command{
 	Short:   "List albums for an artist",
 	Long:    `List albums by artist ID. Use the search artist command to get the ID`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardSetupCompleted() {
+			return
+		}
 		server := getServer()
 		query := shortcuts.Resolve(args[0])
 		albums := server.GetAlbumsForArtist(query)
@@ -38,6 +41,9 @@ var lsAlbumCommand = &cobra.Command{
 	Short:   "List songs for an album",
 	Long:    `List songs by album ID. Use the search album command to get the ID`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardSetupCompleted() {
+			return
+		}
 		server := getServer()
 		query := shortcuts.Resolve(args[0])
 		songs := server.GetSongsForAlbum(query)
@@ -51,6 +57,9 @@ var lsShortcutCommand = &cobra.Command{
 	Short:   "List all shortcuts",
 	Long:    `List all shortcuts in a table`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardSetupCompleted() {
+			return
+		}
 		cuts := shortcuts.GetAll()
 		printer.Shortcuts(cuts)
 	},

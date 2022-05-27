@@ -28,6 +28,9 @@ var artistCommand = &cobra.Command{
 	Short:   "Search for an artist",
 	Long:    `Search for artist by name. Partial names are fine.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardSetupCompleted() {
+			return
+		}
 		server := getServer()
 		query := strings.Join(args, " ")
 		artists := server.SearchArtists(query)
@@ -41,6 +44,9 @@ var albumCommand = &cobra.Command{
 	Short:   "Search the library",
 	Long:    `Search for an album by name`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if !guardSetupCompleted() {
+			return
+		}
 		server := getServer()
 		query := strings.Join(args, " ")
 		albums := server.SearchAlbums(query)
