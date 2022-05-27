@@ -261,22 +261,33 @@ Mosh has a bunch of files, directories, and ports it cares about. There are sane
 | Cache dir | `/tmp/mosh` | `MOSH_CACHE_DIR` |
 
 ## Debugging and Errors
+The most common errors you are likely to hit are daemon not running or setup not found. The following sections should help you debug them. If you are still having trouble feel free to [opn an issue](https://github.com/adamrdrew/mosh/issues/new) along with as much info as you can (command output, daemon log file, etc.)
+### Daemon Not Running
+If you run a command and get this error then the daemon isn't running:
+```
+$ mosh play album 324
+PID file not found. Daemon not running?
+```
+You can use the daemon commands to check status and start:
+```
+ $ mosh daemon status
+PID file not found. Daemon not running?
 
+ $ mosh daemon start
+Starting mosh daemon...
+```
+If for some reason you suspect the daemon is misbehaving you can run `mosh daemon stop ; mosh daemon start` to restart it. If you are still having problems check out the log file at `/var/log/mosh/moshd.log` or wherever you set the log file if you didn't use defaults.
+### Token Missing / Setup Incomplete
+If you try to use mosh either without having run setup or with the config otherwise missing or damaged you'll get this error:
+```
+ $ mosh search artist cave
+Plex token not found. Please run setup.
+```
+If you haven't run setup run it with `mosh setup`. If you did run setup this means that for some reason mosh can't find the config file. The default location is `/etc/mosh/config.yaml` - though it could be in an alternate location if you configured it as such. Running `mosh setup` again and reauthorizing may help.
 
 ## Development
-Running mosh in dev is a little weird, but not that bad once you get used to it. I'm open to suggestions on how to do this better :)
+You can use the `mosh-dev.sh` script to run a dev copy of mosh right from source. The dev instance uses a different config than prod so you can run dev and prod side by side without worrying about your config getting messed up. All of the dev instance's config files, log files, etc will show up in `mosh_tmp` which will be created on the fly. The `mosh-dev.sh` script sets up the config and then sends all remaining args to mosh, so use it just like you do the mosh comamnd:
 
-To start a dev instance of moshd:
-```
-$ make run-dev-moshd
-```
-
-Top stop your dev instance of moshd:
-```
-$ make stop-dev-moshd
-```
-
-Once you've got a dev instance of moshd running you can use the `mosh-dev.sh` script to run mosh commands via a dev instance:
 
 ```
 $ ./mosh-dev.sh get playing
@@ -286,7 +297,28 @@ $ ./mosh-dev.sh get playing
 | All the Love in the World | Nine Inch Nails | With Teeth |
 +---------------------------+-----------------+------------+
 2:48 / 5:25 [#########-----------] 47 %
-```
-`mosh-dev.sh` just passes any arguments you give it to the dev version of `mosh` so the syntax is exactly the same.
 
-The dev instance uses a different config than prod so you can run dev and prod side by side without worrying about your config getting messed up. All of the dev instance's config files, log files, etc will show up in `mosh_tmp` which will be created on the fly. 
+ $ ./mosh-dev.sh get queue
++---------+-------+------------------------------+-----------+-----------------+
+| PLAYING | TRACK | TITLE                        | ALBUM     | ARTIST          |
++---------+-------+------------------------------+-----------+-----------------+
+|         | 1     | HYPERPOWER!                  | Year Zero | Nine Inch Nails |
+| X       | 2     | The Beginning of the End     | Year Zero | Nine Inch Nails |
+|         | 3     | Survivalism                  | Year Zero | Nine Inch Nails |
+|         | 4     | The Good Soldier             | Year Zero | Nine Inch Nails |
+|         | 5     | Vessel                       | Year Zero | Nine Inch Nails |
+|         | 6     | Me, I’m Not                  | Year Zero | Nine Inch Nails |
+|         | 7     | Capital G                    | Year Zero | Nine Inch Nails |
+|         | 8     | My Violent Heart             | Year Zero | Nine Inch Nails |
+|         | 9     | The Warning                  | Year Zero | Nine Inch Nails |
+|         | 10    | God Given                    | Year Zero | Nine Inch Nails |
+|         | 11    | Meet Your Master             | Year Zero | Nine Inch Nails |
+|         | 12    | The Greater Good             | Year Zero | Nine Inch Nails |
+|         | 13    | The Great Destroyer          | Year Zero | Nine Inch Nails |
+|         | 14    | Another Version of the Truth | Year Zero | Nine Inch Nails |
+|         | 15    | In This Twilight             | Year Zero | Nine Inch Nails |
+|         | 16    | Zero‐Sum                     | Year Zero | Nine Inch Nails |
++---------+-------+------------------------------+-----------+-----------------+
+
+```
+
