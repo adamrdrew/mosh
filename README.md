@@ -321,4 +321,22 @@ $ ./mosh-dev.sh get playing
 +---------+-------+------------------------------+-----------+-----------------+
 
 ```
+## Tests
+We've got partial test coverage for public methods. You can run the test suite from the makefile:
 
+```
+ $ make test
+ok      github.com/adamrdrew/mosh/auth  0.002s 61.762s
+ok      github.com/adamrdrew/mosh/config        0.002s
+ok      github.com/adamrdrew/mosh/filehandler   0.584s
+?       github.com/adamrdrew/mosh/ipc   [no test files]
+ok      github.com/adamrdrew/mosh/library_manager       2.688s
+?       github.com/adamrdrew/mosh/moshd [no test files]
+?       github.com/adamrdrew/mosh/player        [no test files]
+ok      github.com/adamrdrew/mosh/plex_urls     0.002s
+?       github.com/adamrdrew/mosh/printer       [no test files]
+?       github.com/adamrdrew/mosh/server        [no test files]
+ok      github.com/adamrdrew/mosh/shortcuts     0.004s
+```
+
+Our test coverage is squarely in the "better than nothing but not that great" territory. Patches and collab welcome!
