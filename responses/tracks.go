@@ -33,6 +33,7 @@ type ResponseTrack struct {
 	Media            ResponseTrackMedia `xml:"Media"`
 	//Track Number
 	Index string `xml:"index,attr"`
+	Image string `xml:"thumb,attr"`
 }
 
 func (r *ResponseTrack) GetPath() string {

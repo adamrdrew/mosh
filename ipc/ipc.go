@@ -27,6 +27,7 @@ type ResponseItem struct {
 	Album       string `json:"album"`
 	CurrentTime string `json:"currenttime"`
 	TotalTime   string `json:"totaltime"`
+	Image       string `json:"image"`
 }
 
 //In some rare cases we need to get multiple reponses from

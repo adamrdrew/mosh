@@ -82,6 +82,7 @@ func (p *Player) GetNowPlaying() ipc.ResponseItem {
 			CurrentTime: "0",
 			Message:     "Nothing playing. Kinda quiet in here.",
 			Code:        "EMPTY",
+			Image:       "",
 		}
 	}
 	track := p.Queue[p.CurrentIndex]
@@ -93,6 +94,7 @@ func (p *Player) GetNowPlaying() ipc.ResponseItem {
 		CurrentTime: strconv.FormatInt(int64(p.Streamer.Position()), 10),
 		Message:     "",
 		Code:        "OK",
+		Image:       track.Image,
 	}
 }
 
