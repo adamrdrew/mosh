@@ -11,6 +11,7 @@ import (
 
 	"github.com/adamrdrew/mosh/config"
 	"github.com/adamrdrew/mosh/ipc"
+	"github.com/adamrdrew/mosh/responses"
 	"github.com/adamrdrew/mosh/server"
 	"github.com/nfnt/resize"
 
@@ -22,7 +23,17 @@ import (
 
 const UPPER_HALF_BLOCK = "▀"
 
-func MakeConverterForTrack(track ipc.ResponseItem) ImageConverter {
+func MakeConverterForResponseTrack(source responses.ResponseTrack) ImageConverter {
+	track := ipc.ResponseItem{
+		Image: source.Image,
+	}
+	i := ImageConverter{
+		Track: track,
+	}
+	return i
+}
+
+func MakeConverterForResponseItem(track ipc.ResponseItem) ImageConverter {
 	i := ImageConverter{
 		Track: track,
 	}
