@@ -10,8 +10,6 @@ import (
 	"strings"
 
 	"github.com/adamrdrew/mosh/config"
-	"github.com/adamrdrew/mosh/ipc"
-	"github.com/adamrdrew/mosh/responses"
 	"github.com/adamrdrew/mosh/server"
 	"github.com/nfnt/resize"
 
@@ -23,25 +21,15 @@ import (
 
 const UPPER_HALF_BLOCK = "▀"
 
-func MakeConverterForResponseTrack(source responses.ResponseTrack) ImageConverter {
-	track := ipc.ResponseItem{
-		Image: source.Image,
-	}
+func MakeConverter(url string) ImageConverter {
 	i := ImageConverter{
-		Track: track,
-	}
-	return i
-}
-
-func MakeConverterForResponseItem(track ipc.ResponseItem) ImageConverter {
-	i := ImageConverter{
-		Track: track,
+		URL: url,
 	}
 	return i
 }
 
 type ImageConverter struct {
-	Track ipc.ResponseItem
+	URL string
 }
 
 func (i *ImageConverter) GetAscii() string {
@@ -56,7 +44,7 @@ func (i *ImageConverter) GetAscii() string {
 func (i *ImageConverter) getImage() image.Image {
 	conf := config.GetConfig()
 	server := server.GetServer(&conf)
-	encodedImage := server.GetArtForSong(i.Track)
+	encodedImage := server.GetArt(i.URL)
 	reader := strings.NewReader(encodedImage)
 	img, _, _ := image.Decode(reader)
 	return img

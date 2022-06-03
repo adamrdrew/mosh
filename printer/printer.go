@@ -57,7 +57,7 @@ func Shortcuts(cuts map[string]string) {
 }
 
 func Songs(source []responses.ResponseTrack) {
-	ascii := track_ascii.MakeConverterForResponseTrack(source[0])
+	ascii := track_ascii.MakeConverter(source[0].Image)
 	fmt.Print(ascii.GetAscii())
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
@@ -85,7 +85,7 @@ func PlayQueue(source ipc.Response) {
 }
 
 func NowPlaying(source ipc.ResponseItem) {
-	ascii := track_ascii.MakeConverterForResponseItem(source)
+	ascii := track_ascii.MakeConverter(source.Image)
 	fmt.Print(ascii.GetAscii())
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)

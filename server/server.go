@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/adamrdrew/mosh/config"
-	"github.com/adamrdrew/mosh/ipc"
 	"github.com/adamrdrew/mosh/plex_urls"
 	"github.com/adamrdrew/mosh/responses"
 )
@@ -90,8 +89,8 @@ func (s *Server) SearchArtists(artistName string) []responses.ResponseArtistDire
 	return serverResponse.Directories
 }
 
-func (s *Server) GetArtForSong(track ipc.ResponseItem) string {
-	url := s.PlexURLs.GetArt(track.Image)
+func (s *Server) GetArt(path string) string {
+	url := s.PlexURLs.GetArt(path)
 
 	body, respCode := s.doGet(url)
 	if respCode != 200 {
