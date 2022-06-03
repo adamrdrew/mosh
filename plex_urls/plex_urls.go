@@ -28,6 +28,10 @@ func (u *PlexURLs) Server() string {
 	return "http://" + u.Config.Address + ":" + u.Config.Port
 }
 
+func (u *PlexURLs) GetArt(query string) string {
+	return u.withToken(u.Server() + query) //u.encodeQuery(query))
+}
+
 func (u *PlexURLs) GetLibraries() string {
 	return u.MakeURL(RT_LIBRARIES)
 }

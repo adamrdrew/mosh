@@ -10,6 +10,7 @@ import (
 	"github.com/adamrdrew/mosh/ipc"
 	"github.com/adamrdrew/mosh/responses"
 	"github.com/adamrdrew/mosh/shortcuts"
+	"github.com/adamrdrew/mosh/track_ascii"
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
@@ -82,6 +83,9 @@ func PlayQueue(source ipc.Response) {
 }
 
 func NowPlaying(source ipc.ResponseItem) {
+	ascii := track_ascii.MakeConverterForTrack(source)
+	fmt.Print(ascii.GetAscii())
+
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"Track", "Artist", "Album"})
