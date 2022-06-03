@@ -5,6 +5,7 @@ package track_ascii
 //@stdupp if you ever have a problem with this or want me to credit differently I'm happy to
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/adamrdrew/mosh/config"
@@ -12,15 +13,14 @@ import (
 	"github.com/adamrdrew/mosh/server"
 	"github.com/nfnt/resize"
 
-	"bytes"
 	"image"
 	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
-	"reflect"
 )
 
 const ASCIISTR = "MND8OZ$7I?+=~:,.."
+const UPPER_HALF_BLOCK = "▀"
 
 func MakeConverterForTrack(track ipc.ResponseItem) ImageConverter {
 	i := ImageConverter{
@@ -37,9 +37,9 @@ func (i *ImageConverter) GetAscii() string {
 
 	image := i.getImage()
 
-	buffer, w, h := i.scaleImage(image, 40)
+	//buffer, w, h := i.scaleImage(image, 40)
 
-	out := i.convert2Ascii(buffer, w, h)
+	out := i.convert2Ascii(image, 16)
 
 	return string(out)
 }
@@ -60,18 +60,64 @@ func (i *ImageConverter) scaleImage(img image.Image, w int) (image.Image, int, i
 	return img, w, h
 }
 
-func (i *ImageConverter) convert2Ascii(img image.Image, w, h int) []byte {
-	table := []byte(ASCIISTR)
-	buf := new(bytes.Buffer)
+func (i *ImageConverter) convert2Ascii(img image.Image, skip int) string {
+	// We'll just reuse this to increment the loop counters
+	skip += 1
+	ansi := resetColorSequence()
+	yMax := img.Bounds().Max.Y
+	xMax := img.Bounds().Max.X
 
-	for i := 0; i < h; i++ {
-		for j := 0; j < w; j++ {
-			g := color.GrayModel.Convert(img.At(j, i))
-			y := reflect.ValueOf(g).FieldByName("Y").Uint()
-			pos := int(y * 16 / 255)
-			_ = buf.WriteByte(table[pos])
+	sequences := make([]string, yMax)
+
+	for y := img.Bounds().Min.Y; y < yMax; y += 2 * skip {
+		sequence := ""
+		for x := img.Bounds().Min.X; x < xMax; x += skip {
+			upperPix := img.At(x, y)
+			lowerPix := img.At(x, y+skip)
+
+			ur, ug, ub := convertColorToRGB(upperPix)
+			lr, lg, lb := convertColorToRGB(lowerPix)
+
+			if y+skip >= yMax {
+				sequence += resetColorSequence()
+			} else {
+				sequence += rgbBackgroundSequence(lr, lg, lb)
+			}
+
+			sequence += rgbTextSequence(ur, ug, ub)
+			sequence += UPPER_HALF_BLOCK
+
+			sequences[y] = sequence
 		}
-		_ = buf.WriteByte('\n')
 	}
-	return buf.Bytes()
+
+	for y := img.Bounds().Min.Y; y < yMax; y += 2 * skip {
+		ansi += sequences[y] + resetColorSequence() + "\n"
+	}
+
+	return ansi
+}
+
+func rgbBackgroundSequence(r, g, b uint8) string {
+	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm", r, g, b)
+}
+
+// 38;2;r;g;bm - set text colour to rgb
+func rgbTextSequence(r, g, b uint8) string {
+	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm", r, g, b)
+}
+
+func resetColorSequence() string {
+	return "\x1b[0m"
+}
+
+func convertColorToRGB(col color.Color) (uint8, uint8, uint8) {
+	rgbaColor := color.RGBAModel.Convert(col)
+	_r, _g, _b, _ := rgbaColor.RGBA()
+	// rgb values are uint8s, I cannot comprehend why the stdlib would return
+	// int32s :facepalm:
+	r := uint8(_r & 0xFF)
+	g := uint8(_g & 0xFF)
+	b := uint8(_b & 0xFF)
+	return r, g, b
 }
