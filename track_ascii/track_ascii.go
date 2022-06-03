@@ -1,8 +1,9 @@
 package track_ascii
 
-//This code is largely lifted from https://github.com/stdupp/goasciiart
-//There's no license on that repo, so I'm assuming public domain or some kind of share and share alike
-//@stdupp if you ever have a problem with this or want me to credit differently I'm happy to
+//This code is largely lifted from https://github.com/ajmalsiddiqui/termpic
+//That code isn't a lib, its an executable, so I copied the code out
+//The original is MIT so lifting it should be cool
+//Shout out to @ajmalsiddiqui for the code - great work!
 
 import (
 	"fmt"
@@ -19,7 +20,6 @@ import (
 	_ "image/png"
 )
 
-const ASCIISTR = "MND8OZ$7I?+=~:,.."
 const UPPER_HALF_BLOCK = "▀"
 
 func MakeConverterForTrack(track ipc.ResponseItem) ImageConverter {
@@ -37,9 +37,7 @@ func (i *ImageConverter) GetAscii() string {
 
 	image := i.getImage()
 
-	//buffer, w, h := i.scaleImage(image, 40)
-
-	out := i.convert2Ascii(image, 16)
+	out := i.convert2Ascii(image, 24)
 
 	return string(out)
 }
@@ -63,7 +61,7 @@ func (i *ImageConverter) scaleImage(img image.Image, w int) (image.Image, int, i
 func (i *ImageConverter) convert2Ascii(img image.Image, skip int) string {
 	// We'll just reuse this to increment the loop counters
 	skip += 1
-	ansi := resetColorSequence()
+	ansi := i.resetColorSequence()
 	yMax := img.Bounds().Max.Y
 	xMax := img.Bounds().Max.X
 
@@ -75,16 +73,16 @@ func (i *ImageConverter) convert2Ascii(img image.Image, skip int) string {
 			upperPix := img.At(x, y)
 			lowerPix := img.At(x, y+skip)
 
-			ur, ug, ub := convertColorToRGB(upperPix)
-			lr, lg, lb := convertColorToRGB(lowerPix)
+			ur, ug, ub := i.convertColorToRGB(upperPix)
+			lr, lg, lb := i.convertColorToRGB(lowerPix)
 
 			if y+skip >= yMax {
-				sequence += resetColorSequence()
+				sequence += i.resetColorSequence()
 			} else {
-				sequence += rgbBackgroundSequence(lr, lg, lb)
+				sequence += i.rgbBackgroundSequence(lr, lg, lb)
 			}
 
-			sequence += rgbTextSequence(ur, ug, ub)
+			sequence += i.rgbTextSequence(ur, ug, ub)
 			sequence += UPPER_HALF_BLOCK
 
 			sequences[y] = sequence
@@ -92,26 +90,26 @@ func (i *ImageConverter) convert2Ascii(img image.Image, skip int) string {
 	}
 
 	for y := img.Bounds().Min.Y; y < yMax; y += 2 * skip {
-		ansi += sequences[y] + resetColorSequence() + "\n"
+		ansi += sequences[y] + i.resetColorSequence() + "\n"
 	}
 
 	return ansi
 }
 
-func rgbBackgroundSequence(r, g, b uint8) string {
+func (i *ImageConverter) rgbBackgroundSequence(r, g, b uint8) string {
 	return fmt.Sprintf("\x1b[48;2;%d;%d;%dm", r, g, b)
 }
 
 // 38;2;r;g;bm - set text colour to rgb
-func rgbTextSequence(r, g, b uint8) string {
+func (i *ImageConverter) rgbTextSequence(r, g, b uint8) string {
 	return fmt.Sprintf("\x1b[38;2;%d;%d;%dm", r, g, b)
 }
 
-func resetColorSequence() string {
+func (i *ImageConverter) resetColorSequence() string {
 	return "\x1b[0m"
 }
 
-func convertColorToRGB(col color.Color) (uint8, uint8, uint8) {
+func (i *ImageConverter) convertColorToRGB(col color.Color) (uint8, uint8, uint8) {
 	rgbaColor := color.RGBAModel.Convert(col)
 	_r, _g, _b, _ := rgbaColor.RGBA()
 	// rgb values are uint8s, I cannot comprehend why the stdlib would return
