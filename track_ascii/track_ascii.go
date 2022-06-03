@@ -37,7 +37,7 @@ func (i *ImageConverter) GetAscii() string {
 
 	image := i.getImage()
 
-	buffer, w, h := i.scaleImage(image, 120)
+	buffer, w, h := i.scaleImage(image, 40)
 
 	out := i.convert2Ascii(buffer, w, h)
 
