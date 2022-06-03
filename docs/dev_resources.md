@@ -53,3 +53,4 @@ http://<IP>:<PORT>/library/sections<LIBRARY KEY>albums?title=pony&X-Plex-Token=<
 * [Beep Example](https://github.com/faiface/beep/wiki/Hello,-Beep!)
 * [Go Pretty Progress](https://github.com/jedib0t/go-pretty/tree/main/progress)
 * [Go Pretty Table](https://github.com/jedib0t/go-pretty/tree/main/table)
+* [termpic](https://github.com/ajmalsiddiqui/termpic)
