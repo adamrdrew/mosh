@@ -59,10 +59,13 @@ func GetConfig() Config {
 }
 
 type Config struct {
-	Token   string
-	Address string
-	Port    string
-	Library string
+	Token           string
+	Address         string
+	Port            string
+	Library         string
+	ShowArt         bool
+	CacheMaxSizeMB  int
+	CacheMaxAgeDays int
 }
 
 func (c *Config) Load() {
@@ -115,10 +118,13 @@ func (c *Config) createConfigFileIfNotThere() {
 	}
 
 	defaultConfig := Config{
-		Token:   UNINITIALIZED,
-		Address: UNINITIALIZED,
-		Port:    UNINITIALIZED,
-		Library: UNINITIALIZED,
+		Token:           UNINITIALIZED,
+		Address:         UNINITIALIZED,
+		Port:            UNINITIALIZED,
+		Library:         UNINITIALIZED,
+		ShowArt:         true,
+		CacheMaxSizeMB:  256,
+		CacheMaxAgeDays: 14,
 	}
 
 	yamlData, err := yaml.Marshal(&defaultConfig)
