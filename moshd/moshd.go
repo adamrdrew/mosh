@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"time"
 
+	cachemanager "github.com/adamrdrew/mosh/cache_manager"
 	"github.com/adamrdrew/mosh/config"
 	"github.com/adamrdrew/mosh/ipc"
 	"github.com/adamrdrew/mosh/player"
@@ -22,6 +23,7 @@ import (
 )
 
 var musicPlayer player.Player
+var cacheLastPruneTime time.Time
 
 func StartWaitAndCheck() {
 	StartDaemon()
@@ -115,6 +117,11 @@ func StartDaemon() {
 
 	defaultSampleRate := beep.SampleRate(44100)
 	speaker.Init(defaultSampleRate, defaultSampleRate.N(time.Second/10))
+
+	//Check and prune cache on daemon start
+	cache := cachemanager.MakeCacheManager()
+	cache.PruneCache()
+	cacheLastPruneTime = time.Now()
 
 	startListener()
 }

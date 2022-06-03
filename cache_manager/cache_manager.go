@@ -13,7 +13,7 @@ import (
 )
 
 //We use this in conversions
-const MB = 1000000
+const MB = 1048576
 
 //Get a new CacheManager
 func MakeCacheManager() CacheManager {
@@ -28,6 +28,7 @@ type CacheManager struct {
 
 //Delete old files and free up space if cache size is too large
 func (c *CacheManager) PruneCache() {
+	log.Print("CacheManager: Starting cache prune...")
 	c.deleteOldFiles()
 	c.deleteFilesIfCacheIsTooLarge()
 }
@@ -49,9 +50,10 @@ func (c *CacheManager) fileIsAvailable(fileName string) bool {
 }
 
 func (c *CacheManager) deleteFilesIfCacheIsTooLarge() {
+	log.Print("CacheManager: Checking if cache needs to shrink...")
 	cacheSize := c.getCacheSizeMB()
 	if cacheSize < int64(c.conf.CacheMaxSizeMB) {
-		log.Printf("CacheManager: Total cache size is less than CacheMaxSizeMB.")
+		log.Printf("CacheManager: Total cache size %dMB is less than CacheMaxSizeMB %dMB.", cacheSize, c.conf.CacheMaxSizeMB)
 		return
 	}
 	deleteList := []string{}
@@ -72,20 +74,21 @@ func (c *CacheManager) deleteFilesIfCacheIsTooLarge() {
 	for _, cachedFilePath := range deleteList {
 		c.deleteFile(cachedFilePath)
 	}
-	freedUpMB := int64(spaceFreedUp) * MB
-	log.Printf("CacheManager: Freed up %db of space.", freedUpMB)
+	freedUpMB := int64(spaceFreedUp) / MB
+	log.Printf("CacheManager: Freed up %dMB of space.", freedUpMB)
 }
 
 func (c *CacheManager) getCacheSizeMB() int64 {
 	out := int64(0)
 	fileList := c.getFileList()
 	for _, fileInfo := range fileList {
-		out += fileInfo.Size() * MB
+		out += fileInfo.Size() / MB
 	}
 	return out
 }
 
 func (c *CacheManager) deleteOldFiles() {
+	log.Print("CacheManager: Checking for old files to delete...")
 	deleted := 0
 	files := c.getFileList()
 	for _, fileInfo := range files {
