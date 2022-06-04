@@ -252,6 +252,8 @@ If you make a mistake `shortcuts delete` has you covered:
 ```
 
 ## Config
+
+### Directories and Ports
 Mosh has a bunch of files, directories, and ports it cares about. There are sane defaults for everything, but you can also configure them all by hand with environment variables. If you decide to change any of these I assume you know enough about what you are doing to deal with any side effects.
 
 | Description | Default | Environment Variable |
@@ -261,6 +263,23 @@ Mosh has a bunch of files, directories, and ports it cares about. There are sane
 | PID dir | `/tmp` | `MOSH_PID_DIR` |
 | Daemon Port | `9666` | `MOSH_PORT` |
 | Cache dir | `/tmp/mosh` | `MOSH_CACHE_DIR` |
+
+### Config Command
+You can use the `mosh config` command to change various runtime options. The options are as follows:
+
+| Command | Valid Values | Description |
+| -- | -- | -- |
+| `mosh config cache-max-days` | 1 through 30 | Files with access times older than this value will be deleted on next cache prune |
+| `mosh config cache-max-size` | 1024 through 16384 | If cache size exceeds this amount in MB files will be deleted from cache |
+| `mosh config show-art` | true or false | Will display album art in `get playing` and `ls album` output | 
+
+## Cache
+Music you listen to is cached locally. When you play music that you've played previously mosh plays from cache. The cache system will periodically free up space by deleting old items. If the cache gets full the oldest items will be deleted until cache utilization is at 50% of max.
+
+## Album Art
+Mosh can display an ascii art representation of album art. Use the `mosh config show-art` command to enable or disable the feaure.
+
+![Alt text](docs/art-example.png "a title")
 
 ## Debugging and Errors
 The most common errors you are likely to hit are daemon not running or setup not found. The following sections should help you debug them. If you are still having trouble feel free to [opn an issue](https://github.com/adamrdrew/mosh/issues/new) along with as much info as you can (command output, daemon log file, etc.)

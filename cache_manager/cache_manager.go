@@ -61,7 +61,7 @@ func (c *CacheManager) deleteFilesIfCacheIsTooLarge() {
 	deleteList := []string{}
 	fileList := c.getFileList()
 	spaceFreedUp := float64(0.0)
-	spaceFreeUpTarget := float64(cacheSize) - (float64(c.conf.CacheMaxSizeMB) * .80)
+	spaceFreeUpTarget := float64(cacheSize) - (float64(c.conf.CacheMaxSizeMB) * .50)
 	for _, fileInfo := range fileList {
 		if !c.fileIsAvailable(fileInfo.Name()) {
 			continue
