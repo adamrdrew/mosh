@@ -11,6 +11,15 @@ const UNINITIALIZED = "UNINITIALIZED"
 const CONFIG_FILE_PART = "config.yaml"
 
 var Version string
+var defaultConfig = Config{
+	Token:           UNINITIALIZED,
+	Address:         UNINITIALIZED,
+	Port:            UNINITIALIZED,
+	Library:         UNINITIALIZED,
+	ShowArt:         false,
+	CacheMaxSizeMB:  4096,
+	CacheMaxAgeDays: 14,
+}
 
 func GetPort() string {
 	port := os.Getenv("MOSH_PORT")
@@ -82,6 +91,17 @@ func (c *Config) filePath() string {
 	return GetConfigDir() + CONFIG_FILE_PART
 }
 
+//If we extend the config spec we'll have bogus values in whatever the new keys are
+//So we have to do this on load
+func (c *Config) setMissingValues() {
+	if c.CacheMaxAgeDays == 0 {
+		c.CacheMaxAgeDays = defaultConfig.CacheMaxAgeDays
+	}
+	if c.CacheMaxSizeMB == 0 {
+		c.CacheMaxSizeMB = defaultConfig.CacheMaxSizeMB
+	}
+}
+
 func (c *Config) loadYAML() {
 	yfile, err := ioutil.ReadFile(c.filePath())
 	if err != nil {
@@ -92,6 +112,9 @@ func (c *Config) loadYAML() {
 	if errorUnmarshal != nil {
 		panic(errorUnmarshal)
 	}
+
+	c.setMissingValues()
+
 }
 
 func (c *Config) Save() {
@@ -115,16 +138,6 @@ func (c *Config) createConfigFileIfNotThere() {
 	_, statErr = os.Stat(c.filePath())
 	if !os.IsNotExist(statErr) {
 		return
-	}
-
-	defaultConfig := Config{
-		Token:           UNINITIALIZED,
-		Address:         UNINITIALIZED,
-		Port:            UNINITIALIZED,
-		Library:         UNINITIALIZED,
-		ShowArt:         true,
-		CacheMaxSizeMB:  4096,
-		CacheMaxAgeDays: 14,
 	}
 
 	yamlData, err := yaml.Marshal(&defaultConfig)
