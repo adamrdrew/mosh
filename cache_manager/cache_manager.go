@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"time"
 
 	"github.com/adamrdrew/mosh/config"
@@ -56,25 +57,26 @@ func (c *CacheManager) deleteFilesIfCacheIsTooLarge() {
 		log.Printf("CacheManager: Total cache size %dMB is less than CacheMaxSizeMB %dMB.", cacheSize, c.conf.CacheMaxSizeMB)
 		return
 	}
+	log.Printf("CacheManager: Total cache size %dMB is exceeds CacheMaxSizeMB %dMB. Cleaning up...", cacheSize, c.conf.CacheMaxSizeMB)
 	deleteList := []string{}
 	fileList := c.getFileList()
 	spaceFreedUp := float64(0.0)
-	spaceFreeUpTarget := float64(c.conf.CacheMaxSizeMB) * .20
+	spaceFreeUpTarget := float64(cacheSize) - (float64(c.conf.CacheMaxSizeMB) * .80)
 	for _, fileInfo := range fileList {
 		if !c.fileIsAvailable(fileInfo.Name()) {
 			continue
 		}
 		size := fileInfo.Size()
-		deleteList = append(deleteList, c.cachePath(fileInfo.Name()))
-		spaceFreedUp += float64(size)
+		deleteList = append(deleteList, fileInfo.Name())
+		spaceFreedUp += float64(size) / MB
 		if spaceFreedUp >= spaceFreeUpTarget {
 			break
 		}
 	}
-	for _, cachedFilePath := range deleteList {
-		c.deleteFile(cachedFilePath)
+	for _, fileName := range deleteList {
+		c.deleteFile(fileName)
 	}
-	freedUpMB := int64(spaceFreedUp) / MB
+	freedUpMB := int64(spaceFreedUp)
 	log.Printf("CacheManager: Freed up %dMB of space.", freedUpMB)
 }
 
@@ -111,6 +113,9 @@ func (c *CacheManager) getFileList() []fs.FileInfo {
 	if err != nil {
 		out = []fs.FileInfo{}
 	}
+	sort.Slice(out, func(i, j int) bool {
+		return out[i].ModTime().Before(out[j].ModTime())
+	})
 	return out
 }
 

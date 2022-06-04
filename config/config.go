@@ -123,7 +123,7 @@ func (c *Config) createConfigFileIfNotThere() {
 		Port:            UNINITIALIZED,
 		Library:         UNINITIALIZED,
 		ShowArt:         true,
-		CacheMaxSizeMB:  256,
+		CacheMaxSizeMB:  4096,
 		CacheMaxAgeDays: 14,
 	}
 

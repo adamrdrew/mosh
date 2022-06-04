@@ -126,6 +126,19 @@ func StartDaemon() {
 	startListener()
 }
 
+func pruneCache() {
+	//If the last time we pruned was after yesterday bail
+	today := time.Now()
+	yesterday := today.AddDate(0, 0, -1)
+	if cacheLastPruneTime.After(yesterday) {
+		return
+	}
+	log.Print("Need to prune cache...")
+	cacheLastPruneTime = today
+	cache := cachemanager.MakeCacheManager()
+	cache.PruneCache()
+}
+
 //Listens for HTTP requests on port 9666 and passes them off to httpListener
 func startListener() {
 	log.Print("Starting listener....")
@@ -181,6 +194,8 @@ func handleMessage(message ipc.Message) ipc.Response {
 	case "next":
 		responseItem = musicPlayer.GoForwardInQueue()
 	}
+
+	go pruneCache()
 
 	response.Add(responseItem)
 	return response
